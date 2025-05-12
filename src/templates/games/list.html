@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Juegos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Nuestros Juegos</h1>
+    <div class="games-grid">
+        <div class="game-card">
+            <h3>Juego 1</h3>
+            <p>Descripción del juego 1</p>
+            <a href="{{ url_for('games.game_detail', game_id=1) }}">Ver más</a>
+        </div>
+        <div class="game-card">
+            <h3>Juego 2</h3>
+            <p>Descripción del juego 2</p>
+            <a href="{{ url_for('games.game_detail', game_id=2) }}">Ver más</a>
+        </div>
+    </div>
+    <a href="{{ url_for('games.categories') }}" class="button">Ver categorías</a>
+</div>
+{% endblock %} 

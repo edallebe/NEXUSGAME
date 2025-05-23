@@ -4,6 +4,7 @@ from routes.auth import auth_bp
 from routes.games import games_bp
 from routes.tournaments import tournaments_bp
 from routes.teams import teams_bp
+from routes.social import social_bp
 
 app = Flask(__name__)
     
@@ -16,6 +17,7 @@ app.register_blueprint(auth_bp)  # Rutas de autenticación, prefijo /auth
 app.register_blueprint(games_bp)
 app.register_blueprint(tournaments_bp)
 app.register_blueprint(teams_bp)
+app.register_blueprint(social_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)

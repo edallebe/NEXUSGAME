@@ -1,0 +1,414 @@
+/* Estilos generales del muro social */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Estilos del encabezado del feed */
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* Estilos de los filtros */
+.feed-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 20px;
+    background: #f0f2f5;
+    color: #65676b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background: #1877f2;
+    color: white;
+}
+
+/* Estilos de las tarjetas de publicación */
+.post-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 1.5rem;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.post-author {
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.post-date {
+    color: #65676b;
+    font-size: 0.9rem;
+}
+
+/* Estilos de las insignias */
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-logro {
+    background: #e4f1fe;
+    color: #1877f2;
+}
+
+.badge-estrategia {
+    background: #d1f7c4;
+    color: #2e7d32;
+}
+
+.badge-noticia {
+    background: #ffe0b2;
+    color: #e65100;
+}
+
+.badge-game {
+    background: #e8eaf6;
+    color: #3f51b5;
+}
+
+/* Estilos del contenido de la publicación */
+.post-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #1c1e21;
+}
+
+.post-content {
+    color: #444;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+/* Estilos del pie de la publicación */
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e4e6eb;
+}
+
+.post-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    color: #65676b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    color: #1877f2;
+}
+
+.action-btn.active {
+    color: #1877f2;
+}
+
+.like-btn.active i {
+    color: #e41e3f;
+}
+
+/* Estilos cuando no hay publicaciones */
+.no-posts {
+    text-align: center;
+    padding: 3rem;
+    background: #f0f2f5;
+    border-radius: 8px;
+}
+
+.no-posts i {
+    font-size: 3rem;
+    color: #65676b;
+    margin-bottom: 1rem;
+}
+
+/* Estilos de paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.page-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e4e6eb;
+    border-radius: 4px;
+    color: #1877f2;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover {
+    background: #e4e6eb;
+}
+
+.page-info {
+    color: #65676b;
+}
+
+/* Estilos de la vista detallada de publicación */
+.post-view {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-navigation {
+    margin-bottom: 2rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #65676b;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-btn:hover {
+    color: #1877f2;
+}
+
+.post-detail {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Estilos de la sección de comentarios */
+.comments-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.comments-section h2 {
+    margin-bottom: 1.5rem;
+    color: #1c1e21;
+}
+
+.comment-form {
+    margin-bottom: 2rem;
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    resize: vertical;
+    margin-bottom: 1rem;
+}
+
+.comment {
+    padding: 1rem;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.comment-date {
+    color: #65676b;
+    font-size: 0.9rem;
+}
+
+.comment-content {
+    color: #444;
+    line-height: 1.5;
+}
+
+.no-comments {
+    text-align: center;
+    padding: 3rem;
+    color: #65676b;
+}
+
+.no-comments i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilos del formulario de nueva publicación */
+.new-post-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.new-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.new-post-header h1 {
+    margin: 0;
+    color: #1c1e21;
+}
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.form-control {
+    padding: 0.75rem;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+select.form-control {
+    background-color: white;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 200px;
+}
+
+.form-text {
+    color: #65676b;
+    font-size: 0.875rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e4e6eb;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .feed-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .feed-filters {
+        justify-content: start;
+    }
+
+    .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .post-type {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .post-view {
+        padding: 1rem;
+    }
+
+    .post-detail,
+    .comments-section {
+        padding: 1rem;
+    }
+
+    .post-title {
+        font-size: 1.5rem;
+    }
+
+    .new-post-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .new-post-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+} 

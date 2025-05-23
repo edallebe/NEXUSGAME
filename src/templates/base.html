@@ -5,23 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block styles %}{% endblock %}
 </head>
 <body>
     <header>
         <nav class="main-nav">
-            <ul>
-                <li><a href="{{ url_for('main.index') }}">Inicio</a></li>
-                <li><a href="{{ url_for('games.list_games') }}">Juegos</a></li>
-                <li><a href="{{ url_for('tournaments.list_tournaments') }}">Torneos</a></li>
-                <li><a href="{{ url_for('teams.list_teams') }}">Equipos</a></li>
-                <li><a href="{{ url_for('auth.login') }}">Iniciar Sesión</a></li>
-                <li><a href="{{ url_for('auth.register') }}">Registrarse</a></li>
-                <li><a href="{{ url_for('auth.logout') }}">Salir</a></li>
-            </ul>
+            <div class="nav-left">
+                <ul>
+                    <li><a href="{{ url_for('main.index') }}">Inicio</a></li>
+                    <li><a href="{{ url_for('games.list_games') }}">Juegos</a></li>
+                    <li><a href="{{ url_for('tournaments.list_tournaments') }}">Torneos</a></li>
+                    <li><a href="{{ url_for('teams.list_teams') }}">Equipos</a></li>
+                    <li><a href="{{ url_for('social.feed') }}"><i class="fas fa-users"></i> Comunidad</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                {% if session.get('user_id') %}
+                    <div class="user-profile">
+                        <div class="profile-dropdown">
+                            <button class="profile-button">
+                                <i class="fas fa-user-circle"></i>
+                                <span>{{ session.get('username', 'Usuario') }}</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="dropdown-content">
+                                <a href="#"><i class="fas fa-user"></i> Mi Perfil</a>
+                                <a href="#"><i class="fas fa-cog"></i> Configuración</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <ul>
+                        <li><a href="{{ url_for('auth.login') }}" class="auth-button login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="auth-button register"><i class="fas fa-user-plus"></i> Registrarse</a></li>
+                    </ul>
+                {% endif %}
+            </div>
         </nav>
     </header>
 
     <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
         {% block content %}
         {% endblock %}
     </main>

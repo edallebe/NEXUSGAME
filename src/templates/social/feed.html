@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Muro Social{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="feed-header">
+        <h1>Muro Social</h1>
+        <a href="{{ url_for('social.new_post') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Publicación
+        </a>
+    </div>
+
+    <div class="feed-filters">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="logro">Logros</button>
+        <button class="filter-btn" data-filter="estrategia">Estrategias</button>
+        <button class="filter-btn" data-filter="noticia">Noticias</button>
+    </div>
+
+    <div class="feed-content">
+        {% for post in posts %}
+            <article class="post-card" data-type="{{ post.tipo }}">
+                <div class="post-header">
+                    <div class="post-meta">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="post-author">{{ post.autor }}</span>
+                        <span class="post-date">{{ post.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</span>
+                    </div>
+                    <div class="post-type">
+                        <span class="badge badge-{{ post.tipo }}">{{ post.tipo|title }}</span>
+                        {% if post.juego %}
+                            <span class="badge badge-game">{{ post.juego }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="post-body">
+                    <h2 class="post-title">{{ post.titulo }}</h2>
+                    <p class="post-content">{{ post.contenido }}</p>
+                </div>
+
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <button class="action-btn like-btn {% if post.user_reaction == 'like' %}active{% endif %}"
+                                data-post-id="{{ post._id }}"
+                                onclick="handleReaction('{{ post._id }}')">
+                            <i class="fas fa-heart"></i>
+                            <span class="likes-count">{{ post.likes }}</span>
+                        </button>
+                        <a href="{{ url_for('social.view_post', post_id=post._id) }}" class="action-btn comment-btn">
+                            <i class="fas fa-comment"></i>
+                            <span class="comments-count">{{ post.comentarios }}</span>
+                        </a>
+                    </div>
+                    {% if session.get('user_id')|string == post.autor_id|string %}
+                        <div class="post-options">
+                            <button class="btn btn-danger btn-sm" onclick="deletePost('{{ post._id }}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </article>
+        {% else %}
+            <div class="no-posts">
+                <i class="fas fa-comments"></i>
+                <p>No hay publicaciones aún. ¡Sé el primero en compartir algo!</p>
+                <a href="{{ url_for('social.new_post') }}" class="btn btn-primary">Crear Publicación</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if total_pages > 1 %}
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('social.feed', page=page-1) }}" class="page-btn">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </a>
+            {% endif %}
+            
+            <span class="page-info">Página {{ page }} de {{ total_pages }}</span>
+            
+            {% if page < total_pages %}
+                <a href="{{ url_for('social.feed', page=page+1) }}" class="page-btn">
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function handleReaction(postId) {
+    fetch(`/social/post/${postId}/react`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'tipo=like'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeBtn = document.querySelector(`[data-post-id="${postId}"]`);
+            const likesCount = likeBtn.querySelector('.likes-count');
+            likesCount.textContent = data.likes;
+            likeBtn.classList.toggle('active');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function deletePost(postId) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+        fetch(`/social/post/${postId}/delete`, {
+            method: 'POST',
+        })
+        .then(() => window.location.reload())
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+// Filtrado de publicaciones
+document.querySelectorAll('.filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        // Actualizar botones
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        // Filtrar publicaciones
+        const filter = button.dataset.filter;
+        document.querySelectorAll('.post-card').forEach(post => {
+            if (filter === 'all' || post.dataset.type === filter) {
+                post.style.display = 'block';
+            } else {
+                post.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %} 

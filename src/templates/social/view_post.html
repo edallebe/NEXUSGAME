@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.titulo }}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/social.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="post-view">
+        <div class="post-navigation">
+            <a href="{{ url_for('social.feed') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Muro
+            </a>
+        </div>
+
+        <article class="post-detail">
+            <div class="post-header">
+                <div class="post-meta">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="post-author">{{ post.autor }}</span>
+                    <span class="post-date">{{ post.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</span>
+                </div>
+                <div class="post-type">
+                    <span class="badge badge-{{ post.tipo }}">{{ post.tipo|title }}</span>
+                    {% if post.juego %}
+                        <span class="badge badge-game">{{ post.juego }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="post-body">
+                <h1 class="post-title">{{ post.titulo }}</h1>
+                <div class="post-content">{{ post.contenido }}</div>
+            </div>
+
+            <div class="post-footer">
+                <div class="post-actions">
+                    <button class="action-btn like-btn {% if post.user_reaction == 'like' %}active{% endif %}"
+                            data-post-id="{{ post._id }}"
+                            onclick="handleReaction('{{ post._id }}')">
+                        <i class="fas fa-heart"></i>
+                        <span class="likes-count">{{ post.likes }}</span>
+                    </button>
+                    <button class="action-btn comment-btn">
+                        <i class="fas fa-comment"></i>
+                        <span class="comments-count">{{ post.comentarios }}</span>
+                    </button>
+                </div>
+                {% if session.get('user_id')|string == post.autor_id|string %}
+                    <div class="post-options">
+                        <button class="btn btn-danger" onclick="deletePost('{{ post._id }}')">
+                            <i class="fas fa-trash"></i> Eliminar Publicación
+                        </button>
+                    </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <section class="comments-section">
+            <h2>Comentarios</h2>
+            
+            <form id="comment-form" class="comment-form" onsubmit="handleComment(event)">
+                <div class="form-group">
+                    <textarea name="contenido" placeholder="Escribe un comentario..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Comentar
+                </button>
+            </form>
+
+            <div class="comments-list">
+                {% for comment in comments %}
+                    <div class="comment" id="comment-{{ comment._id }}">
+                        <div class="comment-header">
+                            <div class="comment-meta">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="comment-author">{{ comment.autor }}</span>
+                                <span class="comment-date">{{ comment.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</span>
+                            </div>
+                            {% if session.get('user_id')|string == comment.autor_id|string %}
+                                <button class="btn btn-danger btn-sm" onclick="deleteComment('{{ comment._id }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="comment-content">
+                            {{ comment.contenido }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="no-comments">
+                        <i class="fas fa-comments"></i>
+                        <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+function handleReaction(postId) {
+    fetch(`/social/post/${postId}/react`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'tipo=like'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeBtn = document.querySelector('.like-btn');
+            const likesCount = likeBtn.querySelector('.likes-count');
+            likesCount.textContent = data.likes;
+            likeBtn.classList.toggle('active');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function handleComment(event) {
+    event.preventDefault();
+    const form = event.target;
+    const contenido = form.contenido.value;
+
+    fetch(`/social/post/{{ post._id }}/comment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `contenido=${encodeURIComponent(contenido)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Crear nuevo elemento de comentario
+            const commentsList = document.querySelector('.comments-list');
+            const noComments = commentsList.querySelector('.no-comments');
+            if (noComments) {
+                noComments.remove();
+            }
+
+            const newComment = document.createElement('div');
+            newComment.className = 'comment';
+            newComment.id = `comment-${data.comment.id}`;
+            newComment.innerHTML = `
+                <div class="comment-header">
+                    <div class="comment-meta">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="comment-author">${data.comment.autor}</span>
+                        <span class="comment-date">${data.comment.fecha_creacion}</span>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="deleteComment('${data.comment.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="comment-content">
+                    ${data.comment.contenido}
+                </div>
+            `;
+
+            commentsList.insertBefore(newComment, commentsList.firstChild);
+            form.reset();
+
+            // Actualizar contador de comentarios
+            const commentsCount = document.querySelector('.comments-count');
+            commentsCount.textContent = parseInt(commentsCount.textContent) + 1;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function deleteComment(commentId) {
+    if (confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
+        fetch(`/social/comment/${commentId}/delete`, {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const comment = document.getElementById(`comment-${commentId}`);
+                comment.remove();
+
+                // Actualizar contador de comentarios
+                const commentsCount = document.querySelector('.comments-count');
+                commentsCount.textContent = parseInt(commentsCount.textContent) - 1;
+
+                // Mostrar mensaje si no hay comentarios
+                const commentsList = document.querySelector('.comments-list');
+                if (!commentsList.children.length) {
+                    commentsList.innerHTML = `
+                        <div class="no-comments">
+                            <i class="fas fa-comments"></i>
+                            <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                        </div>
+                    `;
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+function deletePost(postId) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+        fetch(`/social/post/${postId}/delete`, {
+            method: 'POST'
+        })
+        .then(() => window.location.href = '{{ url_for("social.feed") }}')
+        .catch(error => console.error('Error:', error));
+    }
+}
+</script>
+
+<style>
+.post-view {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.post-navigation {
+    margin-bottom: 2rem;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #65676b;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-btn:hover {
+    color: #1877f2;
+}
+
+.post-detail {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.post-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1c1e21;
+}
+
+.comments-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.comments-section h2 {
+    margin-bottom: 1.5rem;
+    color: #1c1e21;
+}
+
+.comment-form {
+    margin-bottom: 2rem;
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    resize: vertical;
+    margin-bottom: 1rem;
+}
+
+.comment {
+    padding: 1rem;
+    border-bottom: 1px solid #e4e6eb;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #1c1e21;
+}
+
+.comment-date {
+    color: #65676b;
+    font-size: 0.9rem;
+}
+
+.comment-content {
+    color: #444;
+    line-height: 1.5;
+}
+
+.no-comments {
+    text-align: center;
+    padding: 3rem;
+    color: #65676b;
+}
+
+.no-comments i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+    .post-view {
+        padding: 1rem;
+    }
+
+    .post-detail,
+    .comments-section {
+        padding: 1rem;
+    }
+
+    .post-title {
+        font-size: 1.5rem;
+    }
+}
+</style>
+{% endblock %} 

@@ -4,19 +4,126 @@
 
 {% block content %}
 <div class="container">
-    <h1>Juegos</h1>
-    <a href="{{ url_for('games.new_game') }}">nuevo</a>
-    <div class="games-grid">
-    {% for game in games_collection %}
-        <div class="game-card">
-            <h3>{{ game.game }}</h3>
-            <p>{{ game.descripcion }}</p>
-            
-        </div>
+    <div class="header-section">
+        <h1>Juegos</h1>
+        <a href="{{ url_for('games.new_game') }}" class="btn btn-primary">Agregar Nuevo Juego</a>
+    </div>
+
+    {% if games_by_category %}
+        {% for categoria, games in games_by_category.items() %}
+            <div class="category-section">
+                <h2 class="category-title">{{ categoria }}</h2>
+                <div class="games-grid">
+                    {% for game in games %}
+                        <div class="game-card">
+                            {% if game.profile_game and game.profile_game.img_logo %}
+                                <img src="{{ game.profile_game.img_logo }}" alt="Logo de {{ game.game }}" class="game-logo">
+                            {% endif %}
+                            {% if game.profile_game and game.profile_game.img_portada %}
+                                <img src="{{ game.profile_game.img_portada }}" alt="Portada de {{ game.game }}" class="game-cover">
+                            {% endif %}
+                            <div class="game-info">
+                                <h3>{{ game.game }}</h3>
+                                <p>{{ game.descripcion }}</p>
+                                <div class="game-actions">
+                                    <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
     {% else %}
-        <p>No hay juegos disponibles.</p>
-    {% endfor %}
+        <div class="no-games">
+            <p>No hay juegos disponibles.</p>
+            <a href="{{ url_for('games.new_game') }}" class="btn btn-primary">Agregar Primer Juego</a>
+        </div>
+    {% endif %}
 </div>
-    <a href="{{ url_for('games.categories') }}" class="button">Ver categorías</a>
-</div>
+
+<style>
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .category-section {
+        margin-bottom: 3rem;
+    }
+
+    .category-title {
+        color: #333;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .game-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .game-logo {
+        max-width: 100px;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+
+    .game-cover {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    .game-info {
+        padding: 0.5rem 0;
+    }
+
+    .game-info h3 {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+    }
+
+    .game-info p {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .no-games {
+        text-align: center;
+        padding: 2rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .game-actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
 {% endblock %} 

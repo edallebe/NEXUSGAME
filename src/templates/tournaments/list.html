@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Torneos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header-section">
+        <h1>Torneos</h1>
+        <a href="{{ url_for('tournaments.new_tournament') }}" class="btn btn-primary">Crear Nuevo Torneo</a>
+    </div>
+
+    {% if tournaments %}
+        <div class="tournaments-grid">
+            {% for tournament in tournaments %}
+                <div class="tournament-card">
+                    <div class="tournament-header">
+                        <h3>{{ tournament.nombre }}</h3>
+                        <span class="status-badge {{ tournament.estado }}">{{ tournament.estado }}</span>
+                    </div>
+                    <div class="tournament-info">
+                        <p><strong>Juego:</strong> {{ tournament.juego }}</p>
+                        <p><strong>Fecha de inicio:</strong> {{ tournament.fecha_inicio.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Fecha de fin:</strong> {{ tournament.fecha_fin.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Participantes:</strong> {{ tournament.participantes|length }}/{{ tournament.max_participantes }}</p>
+                        <p><strong>Premio:</strong> {{ tournament.premio }}</p>
+                    </div>
+                    <div class="tournament-actions">
+                        <a href="{{ url_for('tournaments.view_tournament', tournament_id=tournament._id) }}" class="btn btn-info">Ver Detalles</a>
+                        {% if session.get('user_id') %}
+                            {% if session.get('user_id')|string in tournament.participantes|map('string') %}
+                                <a href="{{ url_for('tournaments.leave_tournament', tournament_id=tournament._id) }}" class="btn btn-danger">Salir</a>
+                            {% else %}
+                                <a href="{{ url_for('tournaments.join_tournament', tournament_id=tournament._id) }}" class="btn btn-success">Unirse</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-tournaments">
+            <p>No hay torneos disponibles.</p>
+            <a href="{{ url_for('tournaments.new_tournament') }}" class="btn btn-primary">Crear Primer Torneo</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .tournaments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .tournament-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        transition: transform 0.2s;
+    }
+
+    .tournament-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .tournament-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .tournament-header h3 {
+        margin: 0;
+        color: #333;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: bold;
+    }
+
+    .status-badge.pendiente {
+        background: #ffd700;
+        color: #000;
+    }
+
+    .status-badge.en_progreso {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-badge.finalizado {
+        background: #6c757d;
+        color: white;
+    }
+
+    .tournament-info {
+        margin-bottom: 1rem;
+    }
+
+    .tournament-info p {
+        margin: 0.5rem 0;
+        color: #666;
+    }
+
+    .tournament-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-info {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .no-tournaments {
+        text-align: center;
+        padding: 3rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %} 

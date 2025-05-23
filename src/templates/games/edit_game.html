@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Juego{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header-section">
+        <h1>Editar Juego</h1>
+        <a href="{{ url_for('games.list_games') }}" class="btn btn-secondary">Volver a la lista</a>
+    </div>
+
+    <form method="POST" action="{{ url_for('games.edit_game', game_id=game._id) }}" class="edit-form">
+        <div class="form-group">
+            <label for="game">Nombre del Juego:</label>
+            <input type="text" id="game" name="game" class="form-control" value="{{ game.game }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" required>{{ game.descripcion }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria" class="form-control" required>
+                <option value="">Seleccione una categoría</option>
+                <option value="Shooter (FPS/TPS)" {% if game.categoria == 'Shooter (FPS/TPS)' %}selected{% endif %}>Shooter (FPS/TPS)</option>
+                <option value="MOBA" {% if game.categoria == 'MOBA' %}selected{% endif %}>MOBA</option>
+                <option value="Battle Royale" {% if game.categoria == 'Battle Royale' %}selected{% endif %}>Battle Royale</option>
+                <option value="Lucha (Fighting)" {% if game.categoria == 'Lucha (Fighting)' %}selected{% endif %}>Lucha (Fighting)</option>
+                <option value="Estrategia (RTS/TBS)" {% if game.categoria == 'Estrategia (RTS/TBS)' %}selected{% endif %}>Estrategia (RTS/TBS)</option>
+                <option value="Deportes" {% if game.categoria == 'Deportes' %}selected{% endif %}>Deportes</option>
+                <option value="Carreras" {% if game.categoria == 'Carreras' %}selected{% endif %}>Carreras</option>
+                <option value="RPG Competitivo" {% if game.categoria == 'RPG Competitivo' %}selected{% endif %}>RPG Competitivo (MMORPG, ARPG PvP)</option>
+                <option value="Party Games Competitivos" {% if game.categoria == 'Party Games Competitivos' %}selected{% endif %}>Party Games Competitivos</option>
+                <option value="Juego de Cartas Competitivo" {% if game.categoria == 'Juego de Cartas Competitivo' %}selected{% endif %}>Juego de Cartas Competitivo</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="img_logo">URL del Logo:</label>
+            <input type="url" id="img_logo" name="img_logo" class="form-control" value="{{ game.profile_game.img_logo or '' }}">
+            {% if game.profile_game.img_logo %}
+                <div class="current-image">
+                    <p>Logo actual:</p>
+                    <img src="{{ game.profile_game.img_logo }}" alt="Logo actual" class="preview-image">
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="img_portada">URL de la Portada:</label>
+            <input type="url" id="img_portada" name="img_portada" class="form-control" value="{{ game.profile_game.img_portada or '' }}">
+            {% if game.profile_game.img_portada %}
+                <div class="current-image">
+                    <p>Portada actual:</p>
+                    <img src="{{ game.profile_game.img_portada }}" alt="Portada actual" class="preview-image">
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="{{ url_for('games.list_games') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .edit-form {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .current-image {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    .preview-image {
+        max-width: 200px;
+        max-height: 200px;
+        object-fit: contain;
+        margin-top: 0.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+</style>
+{% endblock %} 

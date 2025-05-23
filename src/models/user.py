@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from src.config import Conexion
+from config import Conexion
 
 # Obtener la conexión a la base de datos
 db = Conexion()

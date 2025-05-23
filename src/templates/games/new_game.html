@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo juego{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="POST" action="{{ url_for('games.new_game') }}">
+            <div class="form-group">
+                <label for="nombre">nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="descripcion">descripcion:</label>
+                <input type="text" id="descripcion" name="descripcion" required>
+            </div>
+            <button type="submit">guardar</button>
+        </form>
+</div>
+{% endblock %} 

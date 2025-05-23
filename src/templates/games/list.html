@@ -4,19 +4,19 @@
 
 {% block content %}
 <div class="container">
-    <h1>Nuestros Juegos</h1>
+    <h1>Juegos</h1>
+    <a href="{{ url_for('games.new_game') }}">nuevo</a>
     <div class="games-grid">
+    {% for game in games_collection %}
         <div class="game-card">
-            <h3>Juego 1</h3>
-            <p>Descripción del juego 1</p>
-            <a href="{{ url_for('games.game_detail', game_id=1) }}">Ver más</a>
+            <h3>{{ game.game }}</h3>
+            <p>{{ game.descripcion }}</p>
+            
         </div>
-        <div class="game-card">
-            <h3>Juego 2</h3>
-            <p>Descripción del juego 2</p>
-            <a href="{{ url_for('games.game_detail', game_id=2) }}">Ver más</a>
-        </div>
-    </div>
+    {% else %}
+        <p>No hay juegos disponibles.</p>
+    {% endfor %}
+</div>
     <a href="{{ url_for('games.categories') }}" class="button">Ver categorías</a>
 </div>
 {% endblock %} 

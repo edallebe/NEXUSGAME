@@ -6,7 +6,9 @@
 <div class="container">
     <div class="header-section">
         <h1>Juegos</h1>
-        <a href="{{ url_for('games.new_game') }}" class="btn btn-primary">Agregar Nuevo Juego</a>
+        {% if session.role == 'administrador' %}
+            <a href="{{ url_for('games.new_game') }}" class="btn btn-primary">Agregar Nuevo Juego</a>
+        {% endif %}
     </div>
 
     {% if games_by_category %}
@@ -25,9 +27,11 @@
                             <div class="game-info">
                                 <h3>{{ game.game }}</h3>
                                 <p>{{ game.descripcion }}</p>
-                                <div class="game-actions">
-                                    <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-sm btn-secondary">Editar</a>
-                                </div>
+                                {% if session.role == 'administrador' %}
+                                    <div class="game-actions">
+                                        <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}

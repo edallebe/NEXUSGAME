@@ -4,7 +4,6 @@ from models.games import games_collection
 from models.user import users_collection
 from bson.objectid import ObjectId
 from datetime import datetime
-
 social_bp = Blueprint('social', __name__, url_prefix='/social')
 
 @social_bp.route('/')

@@ -1,0 +1,29 @@
+<!-- templates/admin/dashboard.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <h2>Estadísticas del Sistema</h2>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>{{ stats.total_users }}</h3>
+            <p>Usuarios Totales</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ stats.total_games }}</h3>
+            <p>Juegos Registrados</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ stats.total_posts }}</h3>
+            <p>Publicaciones</p>
+        </div>
+    </div>
+    
+    <div class="admin-actions">
+        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">
+            Gestionar Usuarios
+        </a>
+    </div>
+</div>
+{% endblock %}

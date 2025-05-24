@@ -28,7 +28,8 @@ def register():
 
         # Crear nuevo usuario
         try:
-            user = User(username, email, password)
+            # NUEVO: Todos los usuarios se crean como "usuario" por defecto
+            user = User(username, email, password, role="usuario")
             user.save()
             return redirect(url_for('auth.login', mensaje="Registro exitoso! Por favor inicia sesión"))
         except Exception as e:
@@ -51,8 +52,15 @@ def login():
             # Guardar en sesión
             session['user_id'] = str(user['_id'])
             session['username'] = user['username']
-            flash('Has cerrado sesión exitosamente', "success")
-            return redirect(url_for('main.index', mensaje="Has iniciado sesión correctamente!"))
+            session['role'] = user.get('role', 'usuario')  # NUEVO: Guardar rol en sesión
+            
+            # NUEVO: Redirigir según el rol
+            if user.get('role') == 'administrador':
+                flash('Bienvenido, Administrador', 'success')
+                return redirect(url_for('admin.dashboard'))
+            else:
+                flash('Has iniciado sesión correctamente', 'success')
+                return redirect(url_for('main.index'))
         else:
             return redirect(url_for('auth.login', mensaje="Usuario o contraseña incorrectos", error=True))
 
@@ -61,4 +69,4 @@ def login():
 @auth_bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('main.index', mensaje="Has cerrado sesión")) 
+    return redirect(url_for('main.index', mensaje="Has cerrado sesión"))

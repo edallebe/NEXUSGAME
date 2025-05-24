@@ -6,7 +6,9 @@
 <div class="container">
     <div class="header-section">
         <h1>Torneos</h1>
+        {% if session.role == 'administrador' or session.role == 'usuario' %}
         <a href="{{ url_for('tournaments.new_tournament') }}" class="btn btn-primary">Crear Nuevo Torneo</a>
+        {% endif %}
     </div>
 
     {% if tournaments %}

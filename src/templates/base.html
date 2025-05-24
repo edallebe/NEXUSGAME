@@ -51,6 +51,12 @@
                         <span class="logo-text">NEXUSGAME</span>
                     </a>
                     <ul class="nav-menu">
+                        {% if session.role == 'administrador' %}
+                            <li><a href="{{ url_for('admin.dashboard') }}" class="nav-link">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Panel Admin</span>
+                            </a></li>
+                        {% endif %}
                         <li><a href="{{ url_for('games.list_games') }}" class="nav-link">
                             <i class="fas fa-dice-d20"></i>
                             <span>Juegos</span>

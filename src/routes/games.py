@@ -3,6 +3,7 @@ from models.games import Game, games_collection
 from itertools import groupby
 from operator import itemgetter
 from bson.objectid import ObjectId
+from decorators.auth_decorators import admin_required, login_required
 
 # Creamos un blueprint para juegos
 games_bp = Blueprint('games', __name__, url_prefix='/games')

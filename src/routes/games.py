@@ -35,9 +35,9 @@ def new_game():
             
             # Actualizar las URLs de las imágenes si se proporcionaron
             if request.form.get('img_logo'):
-                game.profile_game['img_logo'] = request.form['img_logo']
+                game.profile_game['img_logo'] = request.form['img_logo'] or ""
             if request.form.get('img_portada'):
-                game.profile_game['img_portada'] = request.form['img_portada']
+                game.profile_game['img_portada'] = request.form['img_portada'] or ""
             
             # Guardar el juego en la base de datos
             game.save_game()
@@ -64,8 +64,8 @@ def edit_game(game_id):
                 'descripcion': request.form['descripcion'],
                 'categoria': request.form['categoria'],
                 'profile_game': {
-                    'img_logo': request.form.get('img_logo') or None,
-                    'img_portada': request.form.get('img_portada') or None
+                    'img_logo': request.form.get('img_logo') or "",
+                    'img_portada': request.form.get('img_portada') or ""
                 }
             }
             

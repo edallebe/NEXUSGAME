@@ -1,83 +1,169 @@
-/* Estilos base */
+/* =================================
+   NEXUSGAME - Gaming Platform Styles
+   Diseño moderno para comunidades gamer
+   ================================= */
+
+/* Reset y configuración base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    /* Gaming Color Palette */
+    --primary-bg: #0a0e1a;
+    --secondary-bg: #1a1f2e;
+    --accent-bg: #252b3d;
+    --neon-blue: #00d4ff;
+    --neon-purple: #b84dff;
+    --neon-green: #39ff14;
+    --danger-red: #ff3366;
+    --warning-orange: #ff8c00;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b6c3;
+    --text-muted: #6b7280;
+    
+    /* Gaming Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    --gradient-secondary: linear-gradient(135deg, #1a1f2e, #252b3d);
+    --gradient-hover: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(184, 77, 255, 0.1));
+    
+    /* Gaming Shadows */
+    --shadow-neon: 0 0 20px rgba(0, 212, 255, 0.3);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--primary-bg);
+    color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(184, 77, 255, 0.1) 0%, transparent 50%);
 }
 
-/* Mensajes */
-.mensaje {
-    padding: 1rem;
+/* =================================
+   Sistema de Mensajes Mejorado
+   ================================= */
+.mensaje, .alert {
+    padding: 1rem 1.5rem;
     margin: 1rem 0;
-    border-radius: 4px;
+    border-radius: 12px;
     text-align: center;
-    animation: fadeIn 0.5s ease-in;
+    position: relative;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideInDown 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-.mensaje.error {
-    background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid #ffcdd2;
+.mensaje.error, .alert-error {
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.1), rgba(255, 51, 102, 0.05));
+    border-color: var(--danger-red);
+    color: var(--danger-red);
+    box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
 }
 
-.mensaje.success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border: 1px solid #c8e6c9;
+.mensaje.success, .alert-success {
+    background: linear-gradient(135deg, rgba(57, 255, 20, 0.1), rgba(57, 255, 20, 0.05));
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
 }
 
-@keyframes fadeIn {
+.alert-info {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 212, 255, 0.05));
+    border-color: var(--neon-blue);
+    color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+/* Animaciones gaming-style */
+@keyframes slideInDown {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-30px) scale(0.9);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
-/* Navegación principal */
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(0, 212, 255, 0.6); }
+}
+
+/* =================================
+   Navegación Gaming Premium
+   ================================= */
 .main-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background: #1a1a1a;
-    color: white;
+    background: rgba(26, 31, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-card);
 }
 
-.nav-left ul,
-.nav-right ul {
+.nav-left ul, .nav-right ul {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
-.nav-left a,
-.nav-right a {
-    color: white;
+.nav-left a, .nav-right a {
+    color: var(--text-secondary);
     text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.nav-left a:hover,
-.nav-right a:hover {
-    color: #007bff;
+.nav-left a:hover, .nav-right a:hover {
+    color: var(--neon-blue);
+    background: rgba(0, 212, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
 }
 
-/* Perfil de usuario */
+.nav-left a::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-left a:hover::before {
+    width: 100%;
+}
+
+/* =================================
+   Perfil de Usuario Gaming
+   ================================= */
 .user-profile {
     position: relative;
 }
@@ -85,18 +171,39 @@ body {
 .profile-button {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    background: none;
-    border: none;
-    color: white;
+    gap: 0.75rem;
+    background: var(--gradient-secondary);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    color: var(--text-primary);
     cursor: pointer;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-hover);
+    transition: left 0.5s ease;
+    z-index: -1;
 }
 
 .profile-button:hover {
-    background-color: #333;
+    border-color: var(--neon-blue);
+    box-shadow: var(--shadow-neon);
+    transform: translateY(-2px);
+}
+
+.profile-button:hover::before {
+    left: 0;
 }
 
 .profile-dropdown {
@@ -108,11 +215,27 @@ body {
     display: none;
     position: absolute;
     right: 0;
-    background-color: white;
-    min-width: 200px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    border-radius: 4px;
-    z-index: 1;
+    top: calc(100% + 10px);
+    background: var(--secondary-bg);
+    min-width: 250px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    box-shadow: var(--shadow-elevated);
+    backdrop-filter: blur(20px);
+    z-index: 1001;
+    overflow: hidden;
+    animation: dropdownSlide 0.3s ease;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .profile-dropdown:hover .dropdown-content {
@@ -120,143 +243,275 @@ body {
 }
 
 .dropdown-content a {
-    color: #333 !important;
-    padding: 0.75rem 1rem;
+    color: var(--text-secondary) !important;
+    padding: 1rem 1.5rem;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .dropdown-content a:hover {
-    background-color: #f8f9fa;
-    color: #007bff !important;
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--neon-blue) !important;
+    transform: translateX(5px);
 }
 
 .dropdown-divider {
     height: 1px;
-    background-color: #e9ecef;
-    margin: 0.5rem 0;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+    margin: 0.5rem 1rem;
 }
 
-/* Botones de autenticación */
+/* =================================
+   Botones de Autenticación Gaming
+   ================================= */
 .auth-button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none !important;
+}
+
+.auth-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.auth-button:hover::before {
+    left: 100%;
 }
 
 .login {
-    background-color: transparent;
-    border: 1px solid #007bff;
+    background: transparent;
+    border: 2px solid var(--neon-blue);
+    color: var(--neon-blue);
+}
+
+.login:hover {
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 .register {
-    background-color: #007bff;
+    background: var(--gradient-primary);
+    border: 2px solid transparent;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
 }
 
-/* Alertas */
-.alert {
-    padding: 1rem;
-    margin: 1rem 2rem;
-    border-radius: 4px;
-    text-align: center;
+.register:hover {
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+    transform: translateY(-2px) scale(1.05);
 }
 
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-}
-
-/* Contenedor principal */
+/* =================================
+   Contenedor Principal
+   ================================= */
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
+    position: relative;
 }
 
-/* Formularios */
+/* =================================
+   Formularios Gaming
+   ================================= */
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .form-group input {
     width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 1rem 1.25rem;
+    background: rgba(37, 43, 61, 0.8);
+    border: 2px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
-button {
-    background-color: #007bff;
+.form-group input:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    background: rgba(37, 43, 61, 1);
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Botones principales */
+button, .btn {
+    background: var(--gradient-primary);
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 1rem 2rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 50px;
     cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-button:hover {
-    background-color: #0056b3;
+button::before, .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
-/* Grid de juegos */
+button:hover, .btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+}
+
+button:hover::before, .btn:hover::before {
+    left: 100%;
+}
+
+button:active, .btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+/* =================================
+   Grid de Juegos Premium
+   ================================= */
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin: 2rem 0;
+    margin: 3rem 0;
 }
 
 .game-card {
-    border: 1px solid #ddd;
-    padding: 1rem;
-    border-radius: 8px;
+    background: var(--gradient-secondary);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    padding: 2rem;
+    border-radius: 20px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-elevated);
+    border-color: var(--neon-blue);
+}
+
+.game-card:hover::before {
+    transform: scaleX(1);
 }
 
 .game-card h3 {
     margin-bottom: 1rem;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
 }
 
-/* Footer */
+/* =================================
+   Footer Gaming
+   ================================= */
 footer {
     margin-top: auto;
-    background-color: #333;
-    color: white;
+    background: var(--secondary-bg);
+    color: var(--text-secondary);
     text-align: center;
-    padding: 1rem;
+    padding: 2rem;
+    border-top: 1px solid rgba(0, 212, 255, 0.2);
+    position: relative;
 }
 
-/* Media Queries */
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gradient-primary);
+}
+
+/* =================================
+   Responsive Gaming Design
+   ================================= */
+@media (max-width: 1024px) {
+    .container {
+        padding: 1.5rem;
+    }
+    
+    .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .main-nav {
         padding: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
-    .nav-left ul,
-    .nav-right ul {
+    .nav-left ul, .nav-right ul {
         gap: 1rem;
+        flex-wrap: wrap;
     }
 
     .profile-button span {
@@ -265,5 +520,91 @@ footer {
 
     .dropdown-content {
         right: -50px;
+        min-width: 200px;
     }
-} 
+
+    .auth-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .nav-left, .nav-right {
+        width: 100%;
+    }
+
+    .nav-left ul, .nav-right ul {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .dropdown-content {
+        position: fixed;
+        right: 1rem;
+        left: 1rem;
+        width: auto;
+    }
+}
+
+/* =================================
+   Efectos de Hover Gaming
+   ================================= */
+.glow-on-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-on-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.glow-on-hover:hover::after {
+    opacity: 0.1;
+}
+
+/* =================================
+   Utilidades Gaming
+   ================================= */
+.text-neon-blue { color: var(--neon-blue); }
+.text-neon-purple { color: var(--neon-purple); }
+.text-neon-green { color: var(--neon-green); }
+
+.bg-gaming-card {
+    background: var(--gradient-secondary);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 16px;
+}
+
+.shadow-gaming {
+    box-shadow: var(--shadow-card);
+}
+
+.neon-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+}

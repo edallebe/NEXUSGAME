@@ -56,7 +56,7 @@ def login():
             
             # NUEVO: Redirigir según el rol
             if user.get('role') == 'administrador':
-                flash('Bienvenido, Administrador', 'success')
+                flash('Bienvenido, Administrador '+user['username'], 'success')
                 return redirect(url_for('admin.dashboard'))
             else:
                 flash('Has iniciado sesión correctamente', 'success')

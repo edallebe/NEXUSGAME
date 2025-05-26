@@ -28,8 +28,15 @@
                                 <h3>{{ game.game }}</h3>
                                 <p>{{ game.descripcion }}</p>
                                 {% if session.role == 'administrador' %}
-                                    <div class="game-actions">
-                                        <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                    <div class="game-actions-container">
+                                        <div class="game-actions">
+                                            <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                                        </div>
+                                        <div class="game-actions">
+                                            <form action="{{ url_for('games.delete_game', game_id=game._id) }}" method="POST" onsubmit="return confirm('¿Estás seguro, quieres eliminar el juego {{ game.game }}?');">
+                                                <a href="{{ url_for('games.delete_game', game_id=game._id) }}" class="btn btn-sm btn-danger">Eliminar</a>
+                                            </form>
+                                        </div>
                                     </div>
                                 {% endif %}
                             </div>
@@ -125,6 +132,11 @@
         gap: 0.5rem;
     }
 
+    .game-actions-container {
+        display: flex;
+        gap: 0.5rem;
+    }
+
     .btn {
         padding: 0.5rem 1rem;
         border: none;
@@ -144,6 +156,11 @@
         color: white;
     }
 
+    .btn-danger {
+        background: #c03d33;
+        color: white;
+    }
+    
     .btn-sm {
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;

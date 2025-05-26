@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel Administrador - NEXUSGAME</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <nav class="admin-nav">
+        <h1>Panel de Administración</h1>
+        <ul>
+            <li><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('admin.manage_users') }}">Usuarios</a></li>
+            <li><a href="{{ url_for('games.list_games') }}">Juegos</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+    
+    <main class="admin-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

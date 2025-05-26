@@ -95,3 +95,21 @@ def edit_game(game_id):
         flash(f'Error al editar el juego: {str(e)}', 'error')
         return redirect(url_for('games.list_games'))
 
+@games_bp.route('/delete/<game_id>', methods=['POST'])
+def delete_game(game_id):
+    try:
+        # Convertir el string ID a ObjectId de MongoDB
+        game_id = ObjectId(game_id)
+        
+        # Eliminar el juego de la base de datos
+        result = games_collection.delete_one({'_id': game_id})
+        
+        if result.deleted_count > 0:
+            flash('Juego eliminado exitosamente', 'success')
+        else:
+            flash('Juego no encontrado', 'error')
+            
+        return redirect(url_for('games.list_games'))
+    except Exception as e:
+        flash(f'Error al eliminar el juego: {str(e)}', 'error')
+        return redirect(url_for('games.list_games'))

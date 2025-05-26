@@ -113,3 +113,24 @@ def delete_game(game_id):
     except Exception as e:
         flash(f'Error al eliminar el juego: {str(e)}', 'error')
         return redirect(url_for('games.list_games'))
+    
+@games_bp.route('/view/<game_id>', methods=['GET'])
+def view_game(game_id):
+    try:
+        # Convertir el string ID a ObjectId de MongoDB
+        game_id = ObjectId(game_id)
+        
+        # Obtener el juego de la base de datos
+        game = games_collection.find_one({'_id': game_id})
+        
+        if game:
+            return render_template('games/view.html', game=game)
+        else:
+            flash('Juego no encontrado', 'error')
+            return redirect(url_for('games.list_games'))
+    except Exception as e:
+        flash(f'Error al mostrar el juego: {str(e)}', 'error')
+        return redirect(url_for('games.list_games'))
+    
+    
+

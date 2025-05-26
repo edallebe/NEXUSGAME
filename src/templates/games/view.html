@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.game }} - Detalles{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="game-detail-header">
+        <a href="{{ url_for('games.list_games') }}" class="btn btn-secondary glow-on-hover back-button">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <h1 class="text-neon-blue">{{ game.game }}</h1>
+    </div>
+
+    <div class="game-detail-content bg-gaming-card shadow-gaming">
+        <div class="game-media-showcase">
+            {% if game.profile_game.img_portada %}
+                <img src="{{ game.profile_game.img_portada }}" alt="Portada de {{ game.game }}" class="game-cover-large">
+            {% endif %}
+            {% if game.profile_game.img_logo %}
+                <img src="{{ game.profile_game.img_logo }}" alt="Logo de {{ game.game }}" class="game-logo-detail neon-glow">
+            {% endif %}
+        </div>
+
+        <div class="game-info-grid">
+            <div class="info-section">
+                <h2 class="text-neon-purple">Descripción</h2>
+                <p>{{ game.descripcion }}</p>
+            </div>
+
+            <div class="info-section">
+                <h2 class="text-neon-purple">Detalles del Juego</h2>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Categoría:</span>
+                        <span class="detail-value">{{ game.categoria }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Desarrollador:</span>
+                        <span class="detail-value">{{ game.profile_game.desarrollador }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Editor:</span>
+                        <span class="detail-value">{{ game.profile_game.editor }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="text-neon-purple">Modos de Juego</h2>
+                <div class="tags-container">
+                    {% for modo in game.profile_game.modo_juego %}
+                        <span class="game-tag">{{ modo }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="text-neon-purple">Plataformas</h2>
+                <div class="tags-container">
+                    {% for plataforma in game.profile_game.plataformas %}
+                        <span class="game-tag">{{ plataforma }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="text-neon-purple">Formatos de Torneo</h2>
+                <div class="tags-container">
+                    {% for formato in game.profile_game.formato_torneo %}
+                        <span class="game-tag">{{ formato }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if game.profile_game.sitio_oficial %}
+            <div class="info-section">
+                <h2 class="text-neon-purple">Sitio Oficial</h2>
+                <a href="{{ game.profile_game.sitio_oficial }}" target="_blank" class="btn btn-primary glow-on-hover">
+                    <i class="fas fa-external-link-alt"></i> Visitar Sitio Web
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .game-detail-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: var(--gradient-secondary);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .back-button {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .game-detail-header h1 {
+        font-size: 2.5rem;
+        margin: 0;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .game-detail-content {
+        padding: 2rem;
+        border-radius: 16px;
+    }
+
+    .game-media-showcase {
+        position: relative;
+        margin-bottom: 2rem;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .game-cover-large {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 16px;
+    }
+
+    .game-logo-detail {
+        position: absolute;
+        bottom: 2rem;
+        left: 2rem;
+        max-width: 150px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: var(--shadow-neon);
+    }
+
+    .game-info-grid {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .info-section {
+        background: rgba(26, 31, 46, 0.5);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .info-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .detail-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .detail-label {
+        color: var(--text-secondary);
+        font-weight: 600;
+    }
+
+    .detail-value {
+        color: var(--text-primary);
+    }
+
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .game-tag {
+        background: rgba(0, 212, 255, 0.1);
+        color: var(--neon-blue);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .game-tag:hover {
+        background: rgba(0, 212, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-neon);
+    }
+
+    @media (max-width: 768px) {
+        .game-detail-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .game-cover-large {
+            height: 300px;
+        }
+
+        .game-logo-detail {
+            max-width: 100px;
+        }
+
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+    }
+</style>
+{% endblock %} 

@@ -5,40 +5,47 @@
 {% block content %}
 <div class="container">
     <div class="header-section">
-        <h1>Juegos</h1>
+        <h1 class="text-neon-blue">Juegos Disponibles</h1>
         {% if session.role == 'administrador' %}
-            <a href="{{ url_for('games.new_game') }}" class="btn btn-primary">Agregar Nuevo Juego</a>
+            <a href="{{ url_for('games.new_game') }}" class="btn glow-on-hover">
+                <i class="fas fa-plus"></i> Agregar Nuevo Juego
+            </a>
         {% endif %}
     </div>
 
     {% if games_by_category %}
         {% for categoria, games in games_by_category.items() %}
-            <div class="category-section">
-                <h2 class="category-title">{{ categoria }}</h2>
+            <div class="category-section bg-gaming-card shadow-gaming">
+                <h2 class="category-title text-neon-purple">{{ categoria }}</h2>
                 <div class="games-grid">
                     {% for game in games %}
-                        <div class="game-card">
-                            {% if game.profile_game and game.profile_game.img_logo %}
-                                <img src="{{ game.profile_game.img_logo }}" alt="Logo de {{ game.game }}" class="game-logo">
-                            {% endif %}
-                            {% if game.profile_game and game.profile_game.img_portada %}
-                                <img src="{{ game.profile_game.img_portada }}" alt="Portada de {{ game.game }}" class="game-cover">
-                            {% endif %}
-                            <div class="game-info">
-                                <h3>{{ game.game }}</h3>
-                                <p>{{ game.descripcion }}</p>
-                                {% if session.role == 'administrador' %}
-                                    <div class="game-actions-container">
-                                        <div class="game-actions">
-                                            <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-sm btn-secondary">Editar</a>
-                                        </div>
-                                        <div class="game-actions">
-                                            <form action="{{ url_for('games.delete_game', game_id=game._id) }}" method="POST" onsubmit="return confirm('¿Estás seguro, quieres eliminar el juego {{ game.game }}?');">
-                                                <a href="{{ url_for('games.delete_game', game_id=game._id) }}" class="btn btn-sm btn-danger">Eliminar</a>
-                                            </form>
-                                        </div>
-                                    </div>
+                        <div class="game-card glow-on-hover">
+                            <div class="game-media">
+                                {% if game.profile_game and game.profile_game.img_logo %}
+                                    <img src="{{ game.profile_game.img_logo }}" alt="Logo de {{ game.game }}" class="game-logo neon-glow">
                                 {% endif %}
+                                {% if game.profile_game and game.profile_game.img_portada %}
+                                    <img src="{{ game.profile_game.img_portada }}" alt="Portada de {{ game.game }}" class="game-cover">
+                                {% endif %}
+                            </div>
+                            <div class="game-info">
+                                <h3 class="text-neon-blue">{{ game.game }}</h3>
+                                <p class="game-description">{{ game.descripcion }}</p>
+                                <div class="game-actions">
+                                    <a href="{{ url_for('games.view_game', game_id=game._id) }}" class="btn btn-primary glow-on-hover">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </a>
+                                    {% if session.role == 'administrador' %}
+                                        <a href="{{ url_for('games.edit_game', game_id=game._id) }}" class="btn btn-secondary glow-on-hover">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                        <a href="{{ url_for('games.delete_game', game_id=game._id) }}" 
+                                           class="btn btn-danger glow-on-hover"
+                                           onclick="return confirm('¿Estás seguro que deseas eliminar el juego {{ game.game }}?');">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -46,9 +53,14 @@
             </div>
         {% endfor %}
     {% else %}
-        <div class="no-games">
-            <p>No hay juegos disponibles.</p>
-            <a href="{{ url_for('games.new_game') }}" class="btn btn-primary">Agregar Primer Juego</a>
+        <div class="no-games bg-gaming-card shadow-gaming">
+            <i class="fas fa-gamepad fa-3x text-neon-purple"></i>
+            <p>No hay juegos disponibles en este momento.</p>
+            {% if session.role == 'administrador' %}
+                <a href="{{ url_for('games.new_game') }}" class="btn glow-on-hover">
+                    <i class="fas fa-plus"></i> Agregar Primer Juego
+                </a>
+            {% endif %}
         </div>
     {% endif %}
 </div>
@@ -58,112 +70,162 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: var(--gradient-secondary);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .header-section h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .category-section {
-        margin-bottom: 3rem;
+        margin-bottom: 4rem;
+        padding: 2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .category-section:hover {
+        transform: translateY(-5px);
     }
 
     .category-title {
-        color: #333;
-        border-bottom: 2px solid #007bff;
-        padding-bottom: 0.5rem;
-        margin-bottom: 1rem;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--neon-purple);
     }
 
     .games-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
     }
 
     .game-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1rem;
-        background: white;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
+        background: var(--gradient-secondary);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .game-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-10px) scale(1.02);
+        border-color: var(--neon-blue);
+        box-shadow: var(--shadow-elevated);
+    }
+
+    .game-media {
+        position: relative;
+        overflow: hidden;
     }
 
     .game-logo {
-        max-width: 100px;
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        max-width: 80px;
         height: auto;
-        margin-bottom: 1rem;
+        z-index: 2;
+        border-radius: 8px;
+        box-shadow: var(--shadow-neon);
     }
 
     .game-cover {
         width: 100%;
         height: 200px;
         object-fit: cover;
-        border-radius: 4px;
-        margin-top: 1rem;
+        transition: transform 0.6s ease;
+    }
+
+    .game-card:hover .game-cover {
+        transform: scale(1.1);
     }
 
     .game-info {
-        padding: 0.5rem 0;
+        padding: 1.5rem;
     }
 
     .game-info h3 {
-        margin: 0 0 0.5rem 0;
-        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
     }
 
-    .game-info p {
-        color: #666;
+    .game-description {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .game-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .game-actions .btn {
+        flex: 1;
+        min-width: 120px;
+        max-width: 200px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
         font-size: 0.9rem;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .delete-form {
+        margin: 0;
     }
 
     .no-games {
         text-align: center;
-        padding: 2rem;
-        background: #f8f9fa;
-        border-radius: 8px;
+        padding: 4rem 2rem;
+        border-radius: 16px;
     }
 
-    .game-actions {
-        margin-top: 1rem;
-        display: flex;
-        gap: 0.5rem;
+    .no-games i {
+        margin-bottom: 1.5rem;
     }
 
-    .game-actions-container {
-        display: flex;
-        gap: 0.5rem;
+    .no-games p {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        font-size: 1.2rem;
     }
 
-    .btn {
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 0.875rem;
-    }
+    @media (max-width: 768px) {
+        .games-grid {
+            grid-template-columns: 1fr;
+        }
 
-    .btn-primary {
-        background: #007bff;
-        color: white;
-    }
+        .header-section {
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: center;
+        }
 
-    .btn-secondary {
-        background: #6c757d;
-        color: white;
-    }
+        .game-actions {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.75rem;
+        }
 
-    .btn-danger {
-        background: #c03d33;
-        color: white;
-    }
-    
-    .btn-sm {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
+        .game-actions .btn {
+            max-width: none;
+        }
     }
 </style>
 {% endblock %} 

@@ -32,6 +32,11 @@
 
             <div class="post-body">
                 <h1 class="post-title">{{ post.titulo }}</h1>
+                {% if post.imagen %}
+                    <div class="post-image">
+                        <img src="{{ post.img_url }}" alt="Imagen de la publicación" style="max-width:100%; border-radius:8px;">
+                    </div>
+                {% endif %}
                 <div class="post-content">{{ post.contenido }}</div>
             </div>
 

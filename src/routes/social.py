@@ -1,10 +1,24 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, Response
 from models.post import Post, Comment, Reaction, posts_collection
 from models.games import games_collection
 from models.user import users_collection
 from bson.objectid import ObjectId
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
+from config import Conexion
+import gridfs
+
 social_bp = Blueprint('social', __name__, url_prefix='/social')
+
+db = Conexion()
+fs = gridfs.GridFS(db)
+
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @social_bp.route('/')
 def feed():
@@ -45,12 +59,14 @@ def new_post():
     
     if request.method == 'POST':
         try:
+            img_url = request.form.get('img_url') 
             post = Post(
                 titulo=request.form['titulo'],
                 contenido=request.form['contenido'],
                 autor_id=session['user_id'],
                 tipo=request.form['tipo'],
-                juego_id=request.form.get('juego_id')
+                juego_id=request.form.get('juego_id'),
+                img_url=img_url
             )
             post.save()
             flash('Publicación creada exitosamente', 'success')

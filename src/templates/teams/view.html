@@ -9,7 +9,7 @@
             <i class="fas fa-arrow-left"></i> Volver
         </a>
         {% if session.get('user_id')|string == team.lider_id|string %}
-            <div class="header-actions">
+        <div class="header-actions">
                 <a href="{{ url_for('teams.edit_team', team_id=team._id) }}" class="btn btn-primary">
                     <i class="fas fa-edit"></i> Editar
                 </a>
@@ -19,7 +19,7 @@
                     <i class="fas fa-trash"></i> Eliminar
                 </a>
             </div>
-        {% endif %}
+            {% endif %}
     </div>
 
     <div class="team-profile">
@@ -78,7 +78,7 @@
                         </div>
                     {% endfor %}
                 </div>
-            </div>
+                </div>
 
             {% if team.juego_info %}
             <div class="game-info-card">
@@ -92,7 +92,7 @@
                                 <div class="game-logo-placeholder">
                                     <i class="fas fa-gamepad"></i>
                                 </div>
-                            {% endif %}
+                                    {% endif %}
                         </div>
                         <div class="game-title">
                             <h3>{{ team.juego_info.game }}</h3>
@@ -107,22 +107,22 @@
                         <div class="game-stat">
                             <i class="fas fa-desktop"></i>
                             <span>{{ team.juego_info.profile_game.plataformas|join(', ') }}</span>
-                        </div>
+                </div>
                     </div>
                 </div>
             </div>
             {% endif %}
-        </div>
+                </div>
 
-        {% if session.get('user_id') %}
-            <div class="team-actions">
-                {% if session.get('user_id')|string in team.miembros|map('string') %}
-                    {% if session.get('user_id')|string != team.lider_id|string %}
+                {% if session.get('user_id') %}
+                    <div class="team-actions">
+                        {% if session.get('user_id')|string in team.miembros|map('string') %}
+                            {% if session.get('user_id')|string != team.lider_id|string %}
                         <a href="{{ url_for('teams.leave_team', team_id=team._id) }}" class="btn btn-danger">
                             <i class="fas fa-sign-out-alt"></i> Salir del Equipo
                         </a>
-                    {% endif %}
-                {% else %}
+                            {% endif %}
+                        {% else %}
                     <a href="{{ url_for('teams.join_team', team_id=team._id) }}" class="btn btn-success">
                         <i class="fas fa-sign-in-alt"></i> Unirse al Equipo
                     </a>
@@ -360,7 +360,7 @@
         .team-header {
             flex-direction: column;
             text-align: center;
-        }
+    }
 
         .team-logo-section {
             margin: 0 0 1.5rem 0;

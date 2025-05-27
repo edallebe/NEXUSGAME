@@ -16,11 +16,11 @@
             <div class="form-grid">
                 <div class="form-section">
                     <h2 class="text-neon-purple">Información Básica</h2>
-                    <div class="form-group">
-                        <label for="nombre">Nombre del Equipo:</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" required>
-                    </div>
-
+        <div class="form-group">
+            <label for="nombre">Nombre del Equipo:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+        </div>
+        
                     <div class="form-group">
                         <label for="descripcion">Descripción:</label>
                         <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
@@ -30,46 +30,46 @@
 
                 <div class="form-section">
                     <h2 class="text-neon-purple">Detalles del Equipo</h2>
-                    <div class="form-group">
-                        <label for="juego_id">Juego:</label>
-                        <select id="juego_id" name="juego_id" class="form-control" required>
-                            <option value="">Seleccione un juego</option>
-                            {% for game in games %}
-                                <option value="{{ game._id }}">{{ game.game }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="maximo_miembros">Máximo de Miembros:</label>
-                        <select id="maximo_miembros" name="maximo_miembros" class="form-control" required>
+        <div class="form-group">
+            <label for="juego_id">Juego:</label>
+            <select id="juego_id" name="juego_id" class="form-control" required>
+                <option value="">Seleccione un juego</option>
+                {% for game in games %}
+                    <option value="{{ game._id }}">{{ game.game }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="maximo_miembros">Máximo de Miembros:</label>
+            <select id="maximo_miembros" name="maximo_miembros" class="form-control" required>
                             <option value="2">2 miembros</option>
                             <option value="3">3 miembros</option>
                             <option value="4">4 miembros</option>
                             <option value="5">5 miembros</option>
-                        </select>
+            </select>
                     </div>
-                </div>
+        </div>
 
                 <div class="form-section">
                     <h2 class="text-neon-purple">Multimedia</h2>
-                    <div class="form-group">
-                        <label for="url_logo">URL del Logo:</label>
-                        <input type="url" id="url_logo" name="url_logo" class="form-control" required>
+        <div class="form-group">    
+            <label for="url_logo">URL del Logo:</label>
+            <input type="url" id="url_logo" name="url_logo" class="form-control" required>
                         <small class="form-text">URL de la imagen que representará a tu equipo</small>
                     </div>
-                </div>
-            </div>
-
-            <div class="form-actions">
+        </div>
+        </div>
+        
+        <div class="form-actions">
                 <button type="submit" class="btn btn-primary glow-on-hover">
                     <i class="fas fa-save"></i> Crear Equipo
                 </button>
                 <a href="{{ url_for('teams.list_teams') }}" class="btn btn-secondary glow-on-hover">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
-            </div>
-        </form>
+        </div>
+    </form>
     </div>
 </div>
 
@@ -225,7 +225,7 @@
         .header-section {
             flex-direction: column;
             text-align: center;
-        }
+    }
 
         .form-grid {
             grid-template-columns: 1fr;

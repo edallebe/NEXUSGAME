@@ -5,140 +5,74 @@
 {% block content %}
 <div class="container">
     <div class="header-section">
-        <a href="{{ url_for('teams.list_teams') }}" class="btn btn-back">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
-        {% if session.get('user_id')|string == team.lider_id|string %}
+        <h1>{{ team.nombre }}</h1>
         <div class="header-actions">
-                <a href="{{ url_for('teams.edit_team', team_id=team._id) }}" class="btn btn-primary">
-                    <i class="fas fa-edit"></i> Editar
-                </a>
-                <a href="{{ url_for('teams.delete_team', team_id=team._id) }}" 
-                   class="btn btn-danger" 
-                   onclick="return confirm('¿Estás seguro de que deseas eliminar este equipo?')">
-                    <i class="fas fa-trash"></i> Eliminar
-                </a>
-            </div>
+            <a href="{{ url_for('teams.list_teams') }}" class="btn btn-secondary">Volver a la lista</a>
+            {% if session.get('user_id')|string == team.lider_id|string %}
+                <a href="{{ url_for('teams.edit_team', team_id=team._id) }}" class="btn btn-primary">Editar Equipo</a>
+                <a href="{{ url_for('teams.delete_team', team_id=team._id) }}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este equipo?')">Eliminar Equipo</a>
             {% endif %}
+        </div>
     </div>
 
-    <div class="team-profile">
-        <div class="team-header">
-            <div class="team-logo-section">
-                {% if team.url_logo %}
-                    <img src="{{ team.url_logo }}" alt="Logo de {{ team.nombre }}" class="team-logo">
-                {% else %}
-                    <div class="team-logo-placeholder">
-                        {{ team.nombre[:2].upper() }}
-                    </div>
+    <div class="team-details">
+        <div class="detail-card">
+            <div class="detail-header">
+                <h2>Información del Equipo</h2>
+                {% if session.get('user_id')|string == team.lider_id|string %}
+                    <span class="badge badge-primary">Líder</span>
                 {% endif %}
             </div>
-            <div class="team-title">
-                <h1>{{ team.nombre }}</h1>
-                <div class="team-meta">
-                    <span class="game-badge">
-                        <i class="fas fa-gamepad"></i> {{ team.juego }}
-                    </span>
-                    <span class="members-count">
-                        <i class="fas fa-users"></i> {{ team.miembros|length }}/{{ team.maximo_miembros }}
-                    </span>
-                    <span class="creation-date">
-                        <i class="fas fa-calendar"></i> Creado el {{ team.creado_en.strftime('%d/%m/%Y') }}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <div class="team-content">
-            <div class="team-description-card">
-                <h2><i class="fas fa-info-circle"></i> Descripción</h2>
-                <p>{{ team.descripcion }}</p>
-            </div>
-
-            <div class="team-members-card">
-                <h2><i class="fas fa-users"></i> Miembros del Equipo</h2>
-                <div class="members-grid">
-                    {% for miembro in team.miembros_info %}
-                        <div class="member-card {% if miembro.is_leader %}leader{% endif %}">
-                            <div class="member-avatar">
-                                {% if miembro.avatar %}
-                                    <img src="{{ miembro.avatar }}" alt="Avatar de {{ miembro.username }}">
-                                {% else %}
-                                    <div class="avatar-placeholder">
-                                        {{ miembro.username[:1].upper() }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="member-info">
-                                <span class="member-name">{{ miembro.username }}</span>
-                                {% if miembro.is_leader %}
-                                    <span class="leader-badge">Líder</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+            
+            <div class="detail-content">
+                <div class="detail-section">
+                    <h3>Detalles Generales</h3>
+                    <p><strong>Juego:</strong> {{ team.juego }}</p>
+                    <p><strong>Fecha de Creación:</strong> {{ team.creado_en.strftime('%d/%m/%Y') }}</p>
                 </div>
 
-            {% if team.juego_info %}
-            <div class="game-info-card">
-                <h2><i class="fas fa-gamepad"></i> Información del Juego</h2>
-                <div class="game-details">
-                    <div class="game-header">
-                        <div class="game-logo">
-                            {% if team.juego_info.profile_game.img_logo %}
-                                <img src="{{ team.juego_info.profile_game.img_logo }}" alt="Logo de {{ team.juego_info.game }}">
-                            {% else %}
-                                <div class="game-logo-placeholder">
-                                    <i class="fas fa-gamepad"></i>
-                                </div>
+                <div class="detail-section">
+                    <h3>Miembros del Equipo</h3>
+                    <p><strong>Número de Miembros:</strong> {{ team.miembros|length }}</p>
+                    <div class="members-list">
+                        <h4>Lista de Miembros:</h4>
+                        <ul>
+                            {% for member in team.miembros %}
+                                <li>
+                                    {{ member }}
+                                    {% if member|string == team.lider_id|string %}
+                                        <span class="badge badge-primary">Líder</span>
                                     {% endif %}
-                        </div>
-                        <div class="game-title">
-                            <h3>{{ team.juego_info.game }}</h3>
-                            <span class="game-developer">{{ team.juego_info.profile_game.desarrollador }}</span>
-                        </div>
-                    </div>
-                    <div class="game-stats">
-                        <div class="game-stat">
-                            <i class="fas fa-users"></i>
-                            <span>{{ team.juego_info.profile_game.modo_juego|join(', ') }}</span>
-                        </div>
-                        <div class="game-stat">
-                            <i class="fas fa-desktop"></i>
-                            <span>{{ team.juego_info.profile_game.plataformas|join(', ') }}</span>
-                </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
-            </div>
-            {% endif %}
+
+                <div class="detail-section">
+                    <h3>Descripción</h3>
+                    <div class="description">
+                        {{ team.descripcion }}
+                    </div>
                 </div>
 
                 {% if session.get('user_id') %}
                     <div class="team-actions">
                         {% if session.get('user_id')|string in team.miembros|map('string') %}
                             {% if session.get('user_id')|string != team.lider_id|string %}
-                        <a href="{{ url_for('teams.leave_team', team_id=team._id) }}" class="btn btn-danger">
-                            <i class="fas fa-sign-out-alt"></i> Salir del Equipo
-                        </a>
+                                <a href="{{ url_for('teams.leave_team', team_id=team._id) }}" class="btn btn-danger">Salir del Equipo</a>
                             {% endif %}
                         {% else %}
-                    <a href="{{ url_for('teams.join_team', team_id=team._id) }}" class="btn btn-success">
-                        <i class="fas fa-sign-in-alt"></i> Unirse al Equipo
-                    </a>
+                            <a href="{{ url_for('teams.join_team', team_id=team._id) }}" class="btn btn-success">Unirse al Equipo</a>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
-        {% endif %}
+        </div>
     </div>
 </div>
 
 <style>
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
-
     .header-section {
         display: flex;
         justify-content: space-between;
@@ -151,297 +85,127 @@
         gap: 1rem;
     }
 
-    .team-profile {
-        background: #1a1a2e;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    .team-details {
+        max-width: 1000px;
+        margin: 0 auto;
     }
 
-    .team-header {
-        display: flex;
-        align-items: center;
-        padding: 2rem;
-        background: #16162a;
-        border-bottom: 1px solid #2a2a4e;
-    }
-
-    .team-logo-section {
-        margin-right: 2rem;
-    }
-
-    .team-logo, .team-logo-placeholder {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        border: 3px solid #3498db;
-    }
-
-    .team-logo-placeholder {
-        background: #16162a;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        font-weight: bold;
-    }
-
-    .team-title h1 {
-        color: #ffffff;
-        margin: 0 0 1rem 0;
-        font-size: 2.5rem;
-    }
-
-    .team-meta {
-        display: flex;
-        gap: 1.5rem;
-        color: #a8a8b3;
-    }
-
-    .team-meta span {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .team-content {
-        padding: 2rem;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-    }
-
-    .team-description-card,
-    .team-members-card,
-    .game-info-card {
-        background: #16162a;
-        border-radius: 10px;
-        padding: 1.5rem;
-        border: 1px solid #2a2a4e;
-    }
-
-    .team-description-card h2,
-    .team-members-card h2,
-    .game-info-card h2 {
-        color: #ffffff;
-        margin-top: 0;
-        margin-bottom: 1rem;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .team-description-card p {
-        color: #a8a8b3;
-        line-height: 1.6;
-    }
-
-    .members-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-
-    .member-card {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        background: #1a1a2e;
+    .detail-card {
+        background: white;
         border-radius: 8px;
-        border: 1px solid #2a2a4e;
-        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 2rem;
     }
 
-    .member-card:hover {
-        transform: translateY(-2px);
-        border-color: #3498db;
-    }
-
-    .member-card.leader {
-        border-color: #3498db;
-        background: #1a1a2e;
-    }
-
-    .member-avatar {
-        width: 40px;
-        height: 40px;
-        margin-right: 1rem;
-    }
-
-    .member-avatar img,
-    .avatar-placeholder {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .avatar-placeholder {
-        background: #3498db;
-        color: white;
+    .detail-header {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .detail-header h2 {
+        margin: 0;
+        color: #333;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
         font-weight: bold;
     }
 
-    .member-info {
-        flex-grow: 1;
+    .badge-primary {
+        background: #007bff;
+        color: white;
     }
 
-    .member-name {
-        color: #ffffff;
-        display: block;
-        margin-bottom: 0.25rem;
+    .detail-section {
+        margin-bottom: 2rem;
     }
 
-    .leader-badge {
-        font-size: 0.8rem;
-        color: #3498db;
-        font-weight: bold;
+    .detail-section h3 {
+        color: #333;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
     }
 
-    .game-details p {
-        color: #a8a8b3;
+    .detail-section p {
         margin: 0.5rem 0;
+        color: #666;
     }
 
-    .game-details strong {
-        color: #ffffff;
+    .members-list {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    .members-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .members-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .members-list li:last-child {
+        border-bottom: none;
+    }
+
+    .description {
+        white-space: pre-line;
+        line-height: 1.6;
+        color: #666;
     }
 
     .team-actions {
-        padding: 2rem;
-        border-top: 1px solid #2a2a4e;
-        display: flex;
-        justify-content: center;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #f0f0f0;
     }
 
     .btn {
-        padding: 0.75rem 1.5rem;
+        padding: 0.5rem 1rem;
         border: none;
-        border-radius: 8px;
+        border-radius: 4px;
         cursor: pointer;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
         text-decoration: none;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-    }
-
-    .btn-back {
-        background: #2a2a4e;
-        color: #ffffff;
+        font-size: 1rem;
     }
 
     .btn-primary {
-        background: #3498db;
-        color: #ffffff;
+        background: #007bff;
+        color: white;
     }
 
-    .btn-danger {
-        background: #e74c3c;
-        color: #ffffff;
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
     }
 
     .btn-success {
-        background: #2ecc71;
-        color: #ffffff;
+        background: #28a745;
+        color: white;
     }
 
-    @media (max-width: 768px) {
-        .team-header {
-            flex-direction: column;
-            text-align: center;
+    .btn-danger {
+        background: #dc3545;
+        color: white;
     }
 
-        .team-logo-section {
-            margin: 0 0 1.5rem 0;
-        }
-
-        .team-meta {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .team-content {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .game-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #2a2a4e;
-    }
-
-    .game-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 2px solid #3498db;
-    }
-
-    .game-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .game-logo-placeholder {
-        width: 100%;
-        height: 100%;
-        background: #16162a;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: #3498db;
-    }
-
-    .game-title {
-        flex-grow: 1;
-    }
-
-    .game-title h3 {
-        color: #ffffff;
-        margin: 0 0 0.5rem 0;
-        font-size: 1.2rem;
-    }
-
-    .game-developer {
-        color: #a8a8b3;
-        font-size: 0.9rem;
-    }
-
-    .game-stats {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .game-stat {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        color: #a8a8b3;
-    }
-
-    .game-stat i {
-        color: #3498db;
-        width: 20px;
-        text-align: center;
+    .btn:hover {
+        opacity: 0.9;
     }
 </style>
 {% endblock %} 

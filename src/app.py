@@ -6,6 +6,7 @@ from routes.tournaments import tournaments_bp
 from routes.teams import teams_bp
 from routes.social import social_bp
 from routes.admin import admin_bp
+from routes.profile import profile_bp
 
 app = Flask(__name__)
     
@@ -20,6 +21,7 @@ app.register_blueprint(tournaments_bp)
 app.register_blueprint(teams_bp)
 app.register_blueprint(social_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(profile_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)

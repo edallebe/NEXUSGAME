@@ -4,13 +4,12 @@
 
 {% block content %}
 <div class="container">
-    <div class="tournament-detail-header">
-        <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-secondary glow-on-hover back-button">
-            <i class="fas fa-arrow-left"></i> Volver
-        </a>
-        <h1 class="text-neon-blue">Crear Nuevo Torneo</h1>
+    <div class="header-section">
+        <h1>Crear Nuevo Torneo</h1>
+        <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-secondary">Volver a la lista</a>
     </div>
 
+<<<<<<< HEAD
     <div class="form-container bg-gaming-card shadow-gaming">
         <form method="POST" action="{{ url_for('tournaments.new_tournament') }}" class="edit-form" id="tournamentForm">
             <div class="form-grid">
@@ -121,176 +120,156 @@
                 <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-secondary glow-on-hover">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
+=======
+    <form method="POST" action="{{ url_for('tournaments.new_tournament') }}" class="tournament-form">
+        <div class="form-group">
+            <label for="nombre">Nombre del Torneo:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="juego_id">Juego:</label>
+            <select id="juego_id" name="juego_id" class="form-control" required>
+                <option value="">Seleccione un juego</option>
+                {% for game in games %}
+                    <option value="{{ game._id }}">{{ game.game }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="fecha_inicio">Fecha de Inicio:</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
             </div>
-        </form>
-    </div>
+            
+            <div class="form-group col-md-6">
+                <label for="fecha_fin">Fecha de Fin:</label>
+                <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required>
+>>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="max_participantes">Número Máximo de Participantes:</label>
+            <input type="number" id="max_participantes" name="max_participantes" class="form-control" min="2" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="premio">Premio:</label>
+            <input type="text" id="premio" name="premio" class="form-control" required>
+            <small class="form-text text-muted">Ejemplo: $1000 USD, Trofeo, etc.</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
+            <small class="form-text text-muted">Describe las reglas, formato y detalles del torneo</small>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Crear Torneo</button>
+            <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
 </div>
 
 <style>
     .header-section {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 2rem;
         margin-bottom: 2rem;
+    }
+
+    .tournament-form {
+        max-width: 800px;
+        margin: 0 auto;
         padding: 2rem;
-        background: var(--gradient-secondary);
-        border-radius: 16px;
-        border: 1px solid rgba(0, 212, 255, 0.2);
-    }
-
-    .header-section h1 {
-        font-size: 2.5rem;
-        margin: 0;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .back-button {
-        padding: 0.75rem 1.5rem;
-    }
-
-    .form-container {
-        padding: 2rem;
-        border-radius: 16px;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-    }
-
-    .form-section {
-        background: rgba(26, 31, 46, 0.5);
-        padding: 1.5rem;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 212, 255, 0.1);
-    }
-
-    .form-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        color: var(--neon-purple);
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .form-group {
         margin-bottom: 1.5rem;
     }
 
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .col-md-6 {
+        flex: 1;
+    }
+
     .form-group label {
         display: block;
-        margin-bottom: 0.75rem;
-        color: var(--text-primary);
-        font-weight: 600;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #333;
     }
 
     .form-control {
         width: 100%;
-        padding: 0.75rem 1rem;
-        background: rgba(37, 43, 61, 0.8);
-        border: 2px solid rgba(0, 212, 255, 0.2);
-        border-radius: 8px;
-        color: var(--text-primary);
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
         font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: var(--neon-blue);
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
     }
 
     textarea.form-control {
-        min-height: 120px;
+        min-height: 150px;
         resize: vertical;
-    }
-
-    select.form-control {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300d4ff' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l-7-7h14l-7 7z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        padding-right: 2.5rem;
     }
 
     .form-text {
         display: block;
-        margin-top: 0.5rem;
-        color: var(--text-secondary);
-        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        color: #6c757d;
     }
 
     .form-actions {
         display: flex;
         gap: 1rem;
         margin-top: 2rem;
-        justify-content: flex-end;
-        padding: 1.5rem;
-        background: rgba(26, 31, 46, 0.5);
-        border-radius: 12px;
-        border: 1px solid rgba(0, 212, 255, 0.1);
-    }
-
-    .form-actions .btn {
-        min-width: 150px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
     }
 
     .btn {
+        padding: 0.5rem 1rem;
         border: none;
-        border-radius: 8px;
+        border-radius: 4px;
         cursor: pointer;
+        font-size: 1rem;
         text-decoration: none;
-        transition: all 0.3s ease;
+        display: inline-block;
     }
 
     .btn-primary {
-        background: var(--neon-blue);
+        background: #007bff;
         color: white;
     }
 
     .btn-secondary {
-        background: rgba(108, 117, 125, 0.8);
+        background: #6c757d;
         color: white;
     }
 
-    .glow-on-hover {
-        position: relative;
-        z-index: 1;
+    .btn:hover {
+        opacity: 0.9;
     }
 
-    .glow-on-hover:hover {
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-        transform: translateY(-2px);
+    select.form-control {
+        background-color: white;
     }
 
-    @media (max-width: 768px) {
-        .header-section {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .form-actions {
-            flex-direction: column;
-        }
-
-        .form-actions .btn {
-            width: 100%;
-        }
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
     }
 </style>
 
@@ -303,6 +282,7 @@
     document.getElementById('fecha_fin').addEventListener('change', function() {
         document.getElementById('fecha_inicio').max = this.value;
     });
+<<<<<<< HEAD
 
     // Función para manejar la modalidad y miembros por equipo
     function toggleMiembrosEquipo() {
@@ -334,5 +314,7 @@
             miembrosHidden.value = '1';
         }
     });
+=======
+>>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
 </script>
 {% endblock %} 

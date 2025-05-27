@@ -6,14 +6,12 @@ db = Conexion()
 teams_collection = db["equipos"]
 
 class Team:
-    def __init__(self, nombre, descripcion, lider_id, juego_id, maximo_miembros, url_logo):
+    def __init__(self, nombre, descripcion, lider_id, juego_id):
         self.nombre = nombre
         self.descripcion = descripcion
         self.lider_id = ObjectId(lider_id)
         self.juego_id = ObjectId(juego_id)
-        self.maximo_miembros = int(maximo_miembros)
-        self.miembros = [ObjectId(lider_id)]
-        self.url_logo = url_logo or ""
+        self.miembros = [ObjectId(lider_id)]  # El líder es el primer miembro
         self.creado_en = datetime.utcnow()
 
     def save(self):
@@ -22,9 +20,7 @@ class Team:
             "descripcion": self.descripcion,
             "lider_id": self.lider_id,
             "juego_id": self.juego_id,
-            "maximo_miembros": self.maximo_miembros,
             "miembros": self.miembros,
-            "url_logo": self.url_logo or "",
             "creado_en": self.creado_en
         }
         return teams_collection.insert_one(team_data)

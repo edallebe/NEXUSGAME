@@ -7,9 +7,10 @@ db = Conexion()
 tournaments_collection = db["torneos"]
 
 class Tournament:
-    def __init__(self, nombre, juego_id, descripcion, fecha_inicio, fecha_fin, modalidad, max_cupos, miembros_X_equipo, premio):
+    def __init__(self, nombre, juego_id, fecha_inicio, fecha_fin, max_participantes, premio, descripcion):
         self.nombre = nombre
         self.juego_id = ObjectId(juego_id)
+<<<<<<< HEAD
         self.descripcion = descripcion
         self.fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
         self.fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
@@ -34,26 +35,36 @@ class Tournament:
         ]
         self.reglas = ""
         self.img_portada = ""
+=======
+        self.fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
+        self.fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
+        self.max_participantes = int(max_participantes)
+        self.premio = premio
+        self.descripcion = descripcion
+        self.estado = "pendiente"  # pendiente, en_progreso, finalizado
+        self.participantes = []
+>>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
         self.creado_en = datetime.utcnow()
 
     def save(self):
         tournament_data = {
             "nombre": self.nombre,
             "juego_id": self.juego_id,
-            "descripcion": self.descripcion,
             "fecha_inicio": self.fecha_inicio,
             "fecha_fin": self.fecha_fin,
+<<<<<<< HEAD
             "modalidad": self.modalidad,
             "max_cupos": self.max_cupos,
             "miembros_X_equipo": self.miembros_X_equipo,
             "creador_id": self.creador_id,
             "premios": self.premios,
+=======
+            "max_participantes": self.max_participantes,
+            "premio": self.premio,
+            "descripcion": self.descripcion,
+>>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
             "estado": self.estado,
             "participantes": self.participantes,
-            "resultados": self.resultados,
-            "podium": self.podium,
-            "reglas": self.reglas,
-            "img_portada": self.img_portada,
             "creado_en": self.creado_en
         }
         return tournaments_collection.insert_one(tournament_data)

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Perfil - NEXUSGAME{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem; color: var(--text-primary);">
+    <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+        <img src="{{ user['profile']['avatar'] }}" alt="Avatar" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--neon-blue);">
+        <div>
+            <h2 style="font-family: 'Orbitron';">{{ user['profile']['full_name'] }}</h2>
+            <p style="color: var(--text-secondary);">{{ user['profile']['bio'] }}</p>
+            <a href="{{ url_for('profile.edit_profile') }}" class="nav-link" style="margin-top: 1rem; display: inline-block; background: var(--gradient-primary); color: white; padding: 0.5rem 1rem; border-radius: 8px;">
+                <i class="fas fa-edit"></i> Editar Perfil
+            </a>
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <h3>🎮 Juegos favoritos:</h3>
+        <ul style="padding-left: 1.5rem;">
+            {% for game in user['profile']['favorite_games'] %}
+                <li style="color: var(--text-secondary);">{{ game }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

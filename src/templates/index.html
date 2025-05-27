@@ -3,7 +3,7 @@
 {% block title %}NEXUSGAME{% endblock %}
 
 {% block content %}
-<div class="container">
+<section class="container">
     <div class="welcome-section" style="text-align:center; margin-bottom:2rem;">
         <h1 class="text-neon-blue">¡Bienvenido a NEXUSGAME!</h1>
         <p class="lead" style="font-size:1.3rem;">
@@ -26,5 +26,160 @@
             <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
         </a>
     </div>
-</div>
+</section>
+
+<section class="section">
+    <h2>Featured Games</h2>
+    <div class="featured-games">
+      <div class="card">
+        <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co74g5.webp" alt="EA Sports FC Online" />
+        <h3>EA Sports FC Online</h3>
+        <p>EA Sports FC Online is a free-to-play massively multiplayer online football game. It was released in various Southeast Asian countries, starting with South Korea in 2018. An English version has yet to be released.</p>
+      </div>
+      <div class="card">
+        <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co1tmu.png" alt="God Of War" />
+        <h3>God Of War</h3>
+        <p>Follow Kratos and Atreus on an adventure in search of answers before Ragnarök. This mythical journey highlights the father-son relationship and the imminent arrival of the end of the Norse world. </p>
+      </div>
+      <div class="card">
+        <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co96yd.webp" alt="Fortnite" />
+        <h3>Fortnite</h3>
+        <p>Fortnite is the completely free online game where you and your friends fight to be the last one standing in Battle Royale, join forces to make your own Creative games, or catch a live show at Party Royale.</p>
+      </div>
+      <div class="card">
+        <img src="https://image.api.playstation.com/vulcan/ap/rnd/202503/2819/346190abf755e3883d1353fbc8d8ccb7e1acf076f1138d6b.jpg" alt="Call Of Duty" />
+        <h3>Call Of Duty</h3>
+        <p>The Nokia N-Gage version of "Call of Duty" brings the intense World War II action of the acclaimed series to a portable format. Developed specifically for the N-Gage platform, this version offers a unique gaming experience that captures the essence of its console counterparts.</p>
+      </div>
+      <div class="card">
+        <img src="https://images.igdb.com/igdb/image/upload/t_cover_big/co49wj.webp" alt="League of Legends" />
+        <h3>League of Legends</h3>
+        <p>League of Legends is a fast-paced, competitive online game that blends the speed and intensity of an RTS with RPG elements. Two teams of powerful champions, each with a unique design and playstyle, battle head-to-head across multiple battlefields and game modes.</p>
+      </div>
+    </div>
+</section>
+
+  <section class="section">
+    <h2>Browse by Genre</h2>
+    <div class="genres">
+      <div class="genre-card">
+        <img src="https://img.icons8.com/color/48/000000/sword.png" alt="Action" />
+        <p>Action</p>
+      </div>
+      <div class="genre-card">
+        <img src="https://img.icons8.com/color/48/000000/treasure-map.png" alt="Adventure" />
+        <p>Adventure</p>
+      </div>
+      <div class="genre-card">
+        <img src="https://img.icons8.com/?size=100&id=17925&format=png&color=000000" alt="RPG" />
+        <p>RPG</p>
+      </div>
+      <div class="genre-card">
+        <img src="https://img.icons8.com/color/48/000000/chessboard.png" alt="Strategy" />
+        <p>Strategy</p>
+      </div>
+      <div class="genre-card">
+        <img src="https://img.icons8.com/color/48/000000/simulation.png" alt="Simulation" />
+        <p>Simulation</p>
+      </div>
+      <div class="genre-card">
+        <img src="https://img.icons8.com/?size=100&id=13037&format=png&color=000000" alt="Sports" />
+        <p>Sports</p>
+      </div>
+    </div>
+</section>
+
+<style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #121212;
+      color: #f3f3f3;
+    }
+    .section {
+      padding: 2rem 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .featured-games, .genres {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      padding: 1.5rem 1rem 1rem 1rem;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 8px 32px 0 #00e0ff44;
+      border: 1.5px solid #00e0ff;
+    }
+    .card img {
+      width: 100%;
+      max-width: 180px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 12px #0008;
+      background: #222;
+    }
+    .card h3 {
+      margin: 0.5rem 0 0.5rem 0;
+      font-size: 1.2rem;
+      color: #00e0ff;
+      letter-spacing: 1px;
+    }
+    .card p {
+      font-size: 0.98rem;
+      color: #e0e0e0;
+      min-height: 60px;
+    }
+    .genre-card {
+      background: linear-gradient(135deg, #232526 0%, #393939 100%);
+      padding: 1.2rem 0.5rem;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.18);
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .genre-card:hover {
+      transform: scale(1.06);
+      box-shadow: 0 4px 18px 0 #00e0ff33;
+      border: 1.5px solid #00e0ff;
+      background: linear-gradient(135deg, #232526 0%, #222 100%);
+    }
+    .genre-card img {
+      width: 48px;
+      margin-bottom: 0.7rem;
+      filter: drop-shadow(0 2px 6px #00e0ff44);
+      transition: filter 0.2s;
+    }
+    .genre-card p {
+      margin: 0;
+      font-size: 1.08rem;
+      color: #00e0ff;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 700px) {
+      .section {
+        padding: 1rem 0.5rem;
+      }
+      .featured-games, .genres {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .card img, .genre-card img {
+        max-width: 120px;
+      }
+    }
+</style>
 {% endblock %} 

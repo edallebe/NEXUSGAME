@@ -1,45 +1,53 @@
 {% extends "base.html" %}
 
-{% block title %}Nuevo Juego{% endblock %}
+{% block title %}Editar Equipo{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="header-section">
-        <a href="{{ url_for('games.list_games') }}" class="btn btn-secondary glow-on-hover back-button">
+        <a href="{{ url_for('teams.view_team', team_id=team._id) }}" class="btn btn-secondary glow-on-hover back-button">
             <i class="fas fa-arrow-left"></i> Volver
         </a>
-        <h1 class="text-neon-blue">Agregar Nuevo Juego</h1>
+        <h1 class="text-neon-blue">Editar Equipo</h1>
     </div>
 
     <div class="form-container bg-gaming-card shadow-gaming">
-        <form method="POST" action="{{ url_for('games.new_game') }}" class="edit-form">
+        <form method="POST" action="{{ url_for('teams.edit_team', team_id=team._id) }}" class="edit-form">
             <div class="form-grid">
                 <div class="form-section">
                     <h2 class="text-neon-purple">Información Básica</h2>
                     <div class="form-group">
-                        <label for="game">Nombre del Juego:</label>
-                        <input type="text" id="game" name="game" class="form-control" required>
+                        <label for="nombre">Nombre del Equipo:</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" value="{{ team.nombre }}" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="descripcion">Descripción:</label>
-                        <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
+                        <textarea id="descripcion" name="descripcion" class="form-control" required>{{ team.descripcion }}</textarea>
+                        <small class="form-text">Describe el propósito y objetivos del equipo</small>
                     </div>
-                    
+                </div>
+
+                <div class="form-section">
+                    <h2 class="text-neon-purple">Detalles del Equipo</h2>
                     <div class="form-group">
-                        <label for="categoria">Categoría:</label>
-                        <select id="categoria" name="categoria" class="form-control" required>
-                            <option value="">Seleccione una categoría</option>
-                            <option value="Shooter (FPS/TPS)">Shooter (FPS/TPS)</option>
-                            <option value="MOBA">MOBA</option>
-                            <option value="Battle Royale">Battle Royale</option>
-                            <option value="Lucha (Fighting)">Lucha (Fighting)</option>
-                            <option value="Estrategia (RTS/TBS)">Estrategia (RTS/TBS)</option>
-                            <option value="Deportes">Deportes</option>
-                            <option value="Carreras">Carreras</option>
-                            <option value="RPG Competitivo">RPG Competitivo (MMORPG, ARPG PvP)</option>
-                            <option value="Party Games Competitivos">Party Games Competitivos</option>
-                            <option value="Juego de Cartas Competitivo">Juego de Cartas Competitivo</option>
+                        <label for="juego_id">Juego:</label>
+                        <select id="juego_id" name="juego_id" class="form-control" required>
+                            {% for game in games %}
+                                <option value="{{ game._id }}" {% if game._id == team.juego_id %}selected{% endif %}>
+                                    {{ game.game }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maximo_miembros">Máximo de Miembros:</label>
+                        <select id="maximo_miembros" name="maximo_miembros" class="form-control" required>
+                            <option value="2" {% if team.maximo_miembros == 2 %}selected{% endif %}>2 miembros</option>
+                            <option value="3" {% if team.maximo_miembros == 3 %}selected{% endif %}>3 miembros</option>
+                            <option value="4" {% if team.maximo_miembros == 4 %}selected{% endif %}>4 miembros</option>
+                            <option value="5" {% if team.maximo_miembros == 5 %}selected{% endif %}>5 miembros</option>
                         </select>
                     </div>
                 </div>
@@ -47,63 +55,35 @@
                 <div class="form-section">
                     <h2 class="text-neon-purple">Multimedia</h2>
                     <div class="form-group">
-                        <label for="img_logo">URL del Logo:</label>
-                        <input type="url" id="img_logo" name="img_logo" class="form-control">
-                        <small class="form-text">URL de la imagen del logo del juego</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="img_portada">URL de la Portada:</label>
-                        <input type="url" id="img_portada" name="img_portada" class="form-control">
-                        <small class="form-text">URL de la imagen de portada del juego</small>
+                        <label for="url_logo">URL del Logo:</label>
+                        <input type="url" id="url_logo" name="url_logo" class="form-control" value="{{ team.url_logo }}" required>
+                        <small class="form-text">URL de la imagen que representará a tu equipo</small>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h2 class="text-neon-purple">Detalles del Juego</h2>
+                    <h2 class="text-neon-purple">Gestión de Miembros</h2>
                     <div class="form-group">
-                        <label for="desarrollador">Desarrollador:</label>
-                        <input type="text" id="desarrollador" name="desarrollador" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editor">Editor:</label>
-                        <input type="text" id="editor" name="editor" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sitio_oficial">Sitio Oficial:</label>
-                        <input type="url" id="sitio_oficial" name="sitio_oficial" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h2 class="text-neon-purple">Información Competitiva</h2>
-                    <div class="form-group">
-                        <label for="modo_juego">Modos de Juego:</label>
-                        <input type="text" id="modo_juego" name="modo_juego" class="form-control">
-                        <small class="form-text">Separar modos por comas (ej: 5v5, 1v1, Battle Royale)</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="plataformas">Plataformas:</label>
-                        <input type="text" id="plataformas" name="plataformas" class="form-control">
-                        <small class="form-text">Separar plataformas por comas (ej: PC, PS5, Xbox)</small>
-                    </div>
-
-            <div class="form-group">
-                        <label for="formato_torneo">Formatos de Torneo:</label>
-                        <input type="text" id="formato_torneo" name="formato_torneo" class="form-control">
-                        <small class="form-text">Separar formatos por comas (ej: Individual, Equipos)</small>
+                        <label for="miembros">Miembros Actuales:</label>
+                        <div class="members-list">
+                            {% for miembro in team.miembros %}
+                            <div class="member-item">
+                                <span class="member-id">{{ miembro }}</span>
+                                {% if miembro|string == team.lider_id|string %}
+                                    <span class="leader-badge">Líder</span>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary glow-on-hover">
-                    <i class="fas fa-save"></i> Guardar Juego
+                    <i class="fas fa-save"></i> Guardar Cambios
                 </button>
-                <a href="{{ url_for('games.list_games') }}" class="btn btn-secondary glow-on-hover">
+                <a href="{{ url_for('teams.view_team', team_id=team._id) }}" class="btn btn-secondary glow-on-hover">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>
@@ -156,6 +136,7 @@
     .form-section h2 {
         font-size: 1.5rem;
         margin-bottom: 1.5rem;
+        color: var(--neon-purple);
     }
 
     .form-group {
@@ -209,6 +190,37 @@
         font-size: 0.85rem;
     }
 
+    .members-list {
+        background: rgba(37, 43, 61, 0.8);
+        border-radius: 8px;
+        padding: 1rem;
+        border: 2px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .member-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .member-item:last-child {
+        border-bottom: none;
+    }
+
+    .member-id {
+        color: var(--text-primary);
+    }
+
+    .leader-badge {
+        background: var(--neon-blue);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
     .form-actions {
         display: flex;
         gap: 1rem;
@@ -230,6 +242,34 @@
         font-size: 1rem;
     }
 
+    .btn {
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: var(--neon-blue);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: rgba(108, 117, 125, 0.8);
+        color: white;
+    }
+
+    .glow-on-hover {
+        position: relative;
+        z-index: 1;
+    }
+
+    .glow-on-hover:hover {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        transform: translateY(-2px);
+    }
+
     @media (max-width: 768px) {
         .header-section {
             flex-direction: column;
@@ -249,4 +289,4 @@
         }
     }
 </style>
-{% endblock %} 
+{% endblock %}

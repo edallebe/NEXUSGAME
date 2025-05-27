@@ -412,11 +412,3 @@ textarea.form-control {
         text-align: center;
     }
 } 
-
-.post-imagen .post-image-content {
-    max-width: 100%;
-    border-radius: 8px;
-    display: block;
-    height: auto; 
-    margin-bottom: 1rem;
-}

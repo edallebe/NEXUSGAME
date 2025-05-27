@@ -73,3 +73,10 @@ class User:
     def get_users():
         """Obtiene todos los usuarios regulares"""
         return list(users_collection.find({"role": "usuario"}))
+    
+    @staticmethod
+    def update_profile(user_id, new_profile_data):
+        return users_collection.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"profile": new_profile_data}}
+        )

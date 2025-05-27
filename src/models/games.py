@@ -4,6 +4,14 @@ db = Conexion()
 users_collection = db["usuarios"]
 games_collection = db["games"]
 
+
+
+from config import Conexion
+
+db = Conexion()
+users_collection = db["usuarios"]
+games_collection = db["games"]
+
 class Game:
     def __init__(self, game, descripcion, categoria):
         self.game = game
@@ -12,22 +20,28 @@ class Game:
         self.profile_game = {
             "img_logo": "",
             "img_portada": "",
-            "desarrollador": "",         # Ej: Riot Games
-            "editor": "",                # Ej: Valve
-            "modo_juego": [],            # Ej: 5v5, 1v1, escuadras
-            "plataformas": [],             # Ej: ['PC', 'PS5', 'Xbox']
-            "formato_torneo": [],        # Ej: Individual, Equipos, Mixto
-            "ranking_global": [],        # Opcional, si enlazas con alguna API o sistema propio
-            "sitio_oficial": ""          # Link al sitio web del juego
+            "desarrollador": "",
+            "editor": "",
+            "modo_juego": [],
+            "plataformas": [],
+            "formato_torneo": [],
+            "ranking_global": [],
+            "sitio_oficial": ""
         }
 
     def save_game(self):
-        game_data={
-            "game":self.game,
-            "descripcion":self.descripcion,
-            "categoria":self.categoria,
-            "profile_game":self.profile_game
+        game_data = {
+            "game": self.game,
+            "descripcion": self.descripcion,
+            "categoria": self.categoria,
+            "profile_game": self.profile_game
         }
+
+        return games_collection.insert_one(game_data)
+
+    @staticmethod
+    def get_all():
+        return list(games_collection.find())
 
         games_iniciales=[
   {

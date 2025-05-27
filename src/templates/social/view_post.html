@@ -32,6 +32,15 @@
 
             <div class="post-body">
                 <h1 class="post-title">{{ post.titulo }}</h1>
+                {% if post.imagen %}
+                    <div class="post-imagen">
+                        <img src="{{ url_for('static', filename='uploads/' ~ post.imagen) }}" alt="Imagen para {{ post.titulo|e }}" class="post-image-content">
+                    </div>
+                {% elif post.img_url %}
+                    <div class="post-imagen">
+                        <img src="{{ post.img_url }}" alt="Imagen para {{ post.titulo|e }}" class="post-image-content">
+                    </div>
+                {% endif %}
                 <div class="post-content">{{ post.contenido }}</div>
             </div>
 

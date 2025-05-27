@@ -8,12 +8,14 @@ comments_collection = db["comentarios"]
 reactions_collection = db["reacciones"]
 
 class Post:
-    def __init__(self, titulo, contenido, autor_id, tipo, juego_id=None):
+    def __init__(self, titulo, contenido, autor_id, tipo, juego_id=None, img_url=None, imagen=None):
         self.titulo = titulo
         self.contenido = contenido
         self.autor_id = ObjectId(autor_id)
         self.tipo = tipo  # 'logro', 'estrategia', 'noticia'
         self.juego_id = ObjectId(juego_id) if juego_id else None
+        self.img_url = img_url
+        self.imagen = imagen
         self.fecha_creacion = datetime.utcnow()
         self.likes = 0
         self.comentarios = 0
@@ -31,6 +33,8 @@ class Post:
             "autor_id": self.autor_id,
             "tipo": self.tipo,
             "juego_id": self.juego_id,
+            "img_url": self.img_url,
+            "imagen": self.imagen,
             "fecha_creacion": self.fecha_creacion,
             "likes": self.likes,
             "comentarios": self.comentarios,

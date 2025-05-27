@@ -1,6 +1,7 @@
 from datetime import datetime
 from config import Conexion
 from bson.objectid import ObjectId
+from models.team import Team
 
 db = Conexion()
 tournaments_collection = db["torneos"]
@@ -8,14 +9,14 @@ tournaments_collection = db["torneos"]
 class Tournament:
     def __init__(self, nombre, juego_id, descripcion, fecha_inicio, fecha_fin, modalidad, max_cupos, miembros_X_equipo, premio):
         self.nombre = nombre
-        self.juego_id = ObjectId(juego_id)  # Referencia al del juego
+        self.juego_id = ObjectId(juego_id)
         self.descripcion = descripcion
         self.fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
         self.fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
-
-        self.modalidad = modalidad.lower()  # solo escoger entre "individual" o "equipo"
-        self.max_cupos = int(max_cupos)  # Máximo de jugadores o equipos
+        self.modalidad = modalidad.lower()
+        self.max_cupos = int(max_cupos)
         self.miembros_X_equipo = int(miembros_X_equipo) if self.modalidad == "equipo" else 1
+        self.creador_id = None  # ID del usuario que crea el torneo
         
         # Inicializar los premios con el premio principal y espacios para segundo y tercer lugar
         self.premios = [
@@ -23,17 +24,17 @@ class Tournament:
             {"puesto": 2, "premio": ""},
             {"puesto": 3, "premio": ""}
         ]
-        self.estado = "pendiente"  # pendiente, en_progreso, finalizado
-        self.participantes = []  # Lista de jugadores o equipos
-        self.resultados = []  # Historial de resultados
-        self.podium = [  # Lista de ganadores ordenada por puesto
+        self.estado = "pendiente"
+        self.participantes = []  # Lista de IDs de jugadores o equipos
+        self.resultados = []
+        self.podium = [
             {"puesto": 1, "ganador_id": ""},
             {"puesto": 2, "ganador_id": ""},
             {"puesto": 3, "ganador_id": ""}
         ]
-        self.reglas = ""  # Reglas del torneo
-        self.img_portada = ""  # URL o path a imagen de portada
-        self.creado_en = datetime.utcnow()        
+        self.reglas = ""
+        self.img_portada = ""
+        self.creado_en = datetime.utcnow()
 
     def save(self):
         tournament_data = {
@@ -45,6 +46,7 @@ class Tournament:
             "modalidad": self.modalidad,
             "max_cupos": self.max_cupos,
             "miembros_X_equipo": self.miembros_X_equipo,
+            "creador_id": self.creador_id,
             "premios": self.premios,
             "estado": self.estado,
             "participantes": self.participantes,
@@ -76,15 +78,38 @@ class Tournament:
         )
 
     @staticmethod
-    def add_participant(tournament_id, user_id):
+    def add_participant(tournament_id, participant_id):
+        tournament = Tournament.find_by_id(tournament_id)
+        if not tournament:
+            raise ValueError("Torneo no encontrado")
+
+        # Verificar si hay cupos disponibles
+        if len(tournament['participantes']) >= tournament['max_cupos']:
+            raise ValueError("El torneo está lleno")
+
+        # Verificar si el participante ya está inscrito
+        if ObjectId(participant_id) in tournament['participantes']:
+            raise ValueError("Ya estás inscrito en este torneo")
+
         return tournaments_collection.update_one(
             {"_id": ObjectId(tournament_id)},
-            {"$push": {"participantes": ObjectId(user_id)}}
+            {"$push": {"participantes": ObjectId(participant_id)}}
         )
 
     @staticmethod
-    def remove_participant(tournament_id, user_id):
+    def remove_participant(tournament_id, participant_id):
         return tournaments_collection.update_one(
             {"_id": ObjectId(tournament_id)},
-            {"$pull": {"participantes": ObjectId(user_id)}}
-        ) 
+            {"$pull": {"participantes": ObjectId(participant_id)}}
+        )
+
+    @staticmethod
+    def delete_tournament(tournament_id, user_id):
+        tournament = Tournament.find_by_id(tournament_id)
+        if not tournament:
+            raise ValueError("Torneo no encontrado")
+        
+        if str(tournament['creador_id']) != str(user_id):
+            raise ValueError("No tienes permiso para eliminar este torneo")
+
+        return tournaments_collection.delete_one({"_id": ObjectId(tournament_id)}) 

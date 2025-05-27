@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Torneo - {{ tournament.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="tournament-edit-header">
+        <a href="{{ url_for('tournaments.view_tournament', tournament_id=tournament._id) }}" class="btn btn-secondary glow-on-hover back-button">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        <h1 class="text-neon-blue">Editar Torneo</h1>
+    </div>
+
+    <div class="tournament-edit-content bg-gaming-card shadow-gaming">
+        <form method="POST" class="tournament-form">
+            <div class="form-grid">
+                <!-- Información Básica -->
+                <div class="form-section">
+                    <h2 class="text-neon-purple">Información Básica</h2>
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Torneo</label>
+                        <input type="text" id="nombre" name="nombre" value="{{ tournament.nombre }}" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="4" required class="form-control">{{ tournament.descripcion }}</textarea>
+                    </div>
+
+                    <!-- Campo de solo lectura para mostrar el juego -->
+                    <div class="form-group">
+                        <label>Juego</label>
+                        <input type="text" value="{{ tournament.juego }}" class="form-control" readonly>
+                    </div>
+
+                    <!-- Campo de solo lectura para mostrar la modalidad -->
+                    <div class="form-group">
+                        <label>Modalidad</label>
+                        <input type="text" value="{{ tournament.modalidad|title }}" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <!-- Fechas y Cupos -->
+                <div class="form-section">
+                    <h2 class="text-neon-purple">Fechas y Cupos</h2>
+                    <div class="form-group">
+                        <label for="fecha_inicio">Fecha de Inicio</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" 
+                               value="{{ tournament.fecha_inicio.strftime('%Y-%m-%d') }}" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_fin">Fecha de Fin</label>
+                        <input type="date" id="fecha_fin" name="fecha_fin" 
+                               value="{{ tournament.fecha_fin.strftime('%Y-%m-%d') }}" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max_cupos">Máximo de Participantes</label>
+                        <input type="number" id="max_cupos" name="max_cupos" 
+                               value="{{ tournament.max_cupos }}" min="2" required class="form-control">
+                    </div>
+                </div>
+
+                <!-- Reglas y Multimedia -->
+                <div class="form-section">
+                    <h2 class="text-neon-purple">Reglas y Multimedia</h2>
+                    <div class="form-group">
+                        <label for="reglas">Reglas del Torneo</label>
+                        <textarea id="reglas" name="reglas" rows="6" class="form-control">{{ tournament.reglas }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="img_portada">URL de Imagen de Portada</label>
+                        <input type="url" id="img_portada" name="img_portada" 
+                               value="{{ tournament.img_portada }}" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary glow-on-hover">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .tournament-edit-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: var(--gradient-secondary);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .tournament-edit-content {
+        padding: 2rem;
+        border-radius: 16px;
+    }
+
+    .form-grid {
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .form-section {
+        background: rgba(26, 31, 46, 0.5);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 212, 255, 0.1);
+    }
+
+    .form-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--neon-purple);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+
+    .form-control:read-only {
+        background: rgba(0, 0, 0, 0.4);
+        cursor: not-allowed;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: rgba(108, 117, 125, 0.8);
+        color: white;
+    }
+
+    .glow-on-hover:hover {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .tournament-edit-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %} 

@@ -4,78 +4,16 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/social.css') }}">
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <div class="new-post-container">
-        <div class="new-post-header">
-            <h1>Crear Nueva Publicación</h1>
-            <a href="{{ url_for('social.feed') }}" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Cancelar
-            </a>
-        </div>
-
-        <form method="POST" class="new-post-form" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="titulo">Título</label>
-                <input type="text" id="titulo" name="titulo" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="tipo">Tipo de Publicación</label>
-                <select id="tipo" name="tipo" class="form-control" required>
-                    <option value="">Selecciona un tipo</option>
-                    <option value="logro">Logro</option>
-                    <option value="estrategia">Estrategia</option>
-                    <option value="noticia">Noticia</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="juego_id">Juego (opcional)</label>
-                <select id="juego_id" name="juego_id" class="form-control">
-                    <option value="">Selecciona un juego</option>
-                    {% for game in games %}
-                        <option value="{{ game._id }}">{{ game.game }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="contenido">Contenido</label>
-                <textarea id="contenido" name="contenido" class="form-control" rows="10" required></textarea>
-                <small class="form-text text-muted">Comparte tus logros, estrategias o noticias con la comunidad.</small>
-            </div>
-
-            <div class="form-group">
-                <label for="imagen_file">Subir Imagen (opcional)</label>
-                <input type="file" id="imagen_file" name="imagen_file" class="form-control" accept="image/*">
-            </div>
-
-            <div class="form-group">
-                <label for="img_url">URL de la Imagen</label>
-                <input type="url" id="img_url" name="img_url" class="form-control" placeholder="https://...">
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i> Publicar
-                </button>
-                <a href="{{ url_for('social.feed') }}" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
-    </div>
-</div>
-
 <style>
 .new-post-container {
     max-width: 800px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    background: rgba(26, 31, 46, 0.8);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
     padding: 2rem;
+    color: #fff;
 }
 
 .new-post-header {
@@ -84,12 +22,14 @@
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e4e6eb;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
 
 .new-post-header h1 {
     margin: 0;
-    color: #1c1e21;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    font-size: 2rem;
 }
 
 .new-post-form {
@@ -106,18 +46,34 @@
 
 .form-group label {
     font-weight: 600;
-    color: #1c1e21;
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.3);
 }
 
 .form-control {
     padding: 0.75rem;
-    border: 1px solid #e4e6eb;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
     border-radius: 8px;
     font-size: 1rem;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 select.form-control {
-    background-color: white;
+    background-color: rgba(26, 31, 46, 0.9);
+}
+
+select.form-control option {
+    background-color: #1a1f2e;
+    color: #fff;
 }
 
 textarea.form-control {
@@ -126,7 +82,7 @@ textarea.form-control {
 }
 
 .form-text {
-    color: #65676b;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.875rem;
 }
 
@@ -135,7 +91,64 @@ textarea.form-control {
     gap: 1rem;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #e4e6eb;
+    border-top: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary {
+    background: var(--neon-blue);
+    color: #1a1f2e;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background: #00ffff;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--neon-blue);
+}
+
+/* Estilo personalizado para el input de tipo file */
+input[type="file"] {
+    background: transparent;
+    padding: 0.5rem;
+    border: 1px dashed rgba(0, 212, 255, 0.3);
+}
+
+input[type="file"]::-webkit-file-upload-button {
+    background: var(--neon-blue);
+    color: #1a1f2e;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    background: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 @media (max-width: 768px) {
@@ -149,6 +162,79 @@ textarea.form-control {
         gap: 1rem;
         text-align: center;
     }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="new-post-container">
+        <div class="new-post-header">
+            <h1><i class="fas fa-edit"></i> Crear Nueva Publicación</h1>
+            <a href="{{ url_for('social.feed') }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+        </div>
+
+        <form method="POST" class="new-post-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="titulo"><i class="fas fa-heading"></i> Título</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo"><i class="fas fa-tag"></i> Tipo de Publicación</label>
+                <select id="tipo" name="tipo" class="form-control" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="logro">🏆 Logro</option>
+                    <option value="estrategia">🎮 Estrategia</option>
+                    <option value="noticia">📰 Noticia</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="juego_id"><i class="fas fa-gamepad"></i> Juego (opcional)</label>
+                <select id="juego_id" name="juego_id" class="form-control">
+                    <option value="">Selecciona un juego</option>
+                    {% for game in games %}
+                        <option value="{{ game._id }}">{{ game.game }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="contenido"><i class="fas fa-pen-fancy"></i> Contenido</label>
+                <textarea id="contenido" name="contenido" class="form-control" rows="10" required></textarea>
+                <small class="form-text">Comparte tus logros, estrategias o noticias con la comunidad.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="imagen_file"><i class="fas fa-image"></i> Subir Imagen (opcional)</label>
+                <input type="file" id="imagen_file" name="imagen_file" class="form-control" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="img_url"><i class="fas fa-link"></i> URL de la Imagen (opcional)</label>
+                <input type="url" id="img_url" name="img_url" class="form-control" placeholder="https://...">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Publicar
+                </button>
+                <a href="{{ url_for('social.feed') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %} 

@@ -52,7 +52,7 @@
 
                     <div class="form-group" id="miembrosEquipoGroup" style="display: none;">
                         <label for="miembros_X_equipo">Miembros por Equipo:</label>
-                        <input type="number" id="miembros_X_equipo" name="miembros_X_equipo" class="form-control" min="2" value="1">
+                        <input type="number" id="miembros_X_equipo" name="miembros_X_equipo" class="form-control" min="2" value="2">
                         <small class="form-text">Número de jugadores requeridos por equipo</small>
                     </div>
 
@@ -112,7 +112,6 @@
                 </div>
             </div>
 
-            <!-- Campo oculto para miembros_X_equipo -->
             <input type="hidden" id="miembros_X_equipo_hidden" name="miembros_X_equipo" value="1">
 
             <div class="form-actions">
@@ -305,32 +304,23 @@
         document.getElementById('fecha_inicio').max = this.value;
     });
 
-    // Mostrar/ocultar campo de miembros por equipo y manejar el valor
+    // Función para manejar la modalidad y miembros por equipo
     function toggleMiembrosEquipo() {
         const modalidad = document.getElementById('modalidad').value;
         const miembrosGroup = document.getElementById('miembrosEquipoGroup');
-        const miembrosInput = document.getElementById('miembros_X_equipo');
         const miembrosHidden = document.getElementById('miembros_X_equipo_hidden');
 
         if (modalidad === 'equipo') {
             miembrosGroup.style.display = 'block';
-            miembrosInput.required = true;
-            miembrosInput.value = '2';
+            document.getElementById('miembros_X_equipo').value = '2';
             miembrosHidden.value = '2';
         } else {
             miembrosGroup.style.display = 'none';
-            miembrosInput.required = false;
-            miembrosInput.value = '1';
             miembrosHidden.value = '1';
         }
     }
 
-    // Actualizar el valor oculto cuando cambie el input visible
-    document.getElementById('miembros_X_equipo').addEventListener('change', function() {
-        document.getElementById('miembros_X_equipo_hidden').value = this.value;
-    });
-
-    // Inicializar el estado del campo miembros_X_equipo
+    // Inicializar cuando el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
         toggleMiembrosEquipo();
     });

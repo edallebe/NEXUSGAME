@@ -68,4 +68,13 @@ class Team:
 
     @staticmethod
     def delete_team(team_id):
-        return teams_collection.delete_one({"_id": ObjectId(team_id)}) 
+        return teams_collection.delete_one({"_id": ObjectId(team_id)})
+
+    @staticmethod
+    def find_by_leader(user_id):
+        """
+        Busca todos los equipos donde el usuario especificado es líder
+        """
+        if isinstance(user_id, str):
+            user_id = ObjectId(user_id)
+        return list(teams_collection.find({"lider_id": user_id})) 

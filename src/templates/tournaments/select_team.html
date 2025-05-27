@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Seleccionar Equipo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="select-team-header">
+        <h1 class="text-neon-blue">Seleccionar Equipo</h1>
+        <p class="tournament-info">
+            Torneo: <span class="text-neon-purple">{{ tournament.nombre }}</span>
+        </p>
+        <p class="requirements-info">
+            Requisitos: <span class="text-neon-blue">{{ tournament.miembros_X_equipo }} miembros por equipo</span>
+        </p>
+    </div>
+
+    {% if teams %}
+    <div class="teams-grid">
+        {% for team in teams %}
+        <div class="team-card bg-gaming-card">
+            <div class="team-header">
+                <h3 class="team-name">{{ team.nombre }}</h3>
+                <span class="member-count">
+                    <i class="fas fa-users"></i> {{ team.miembros|length }} miembros
+                </span>
+            </div>
+
+            <div class="team-members">
+                <h4>Miembros:</h4>
+                <ul>
+                    {% for member in team.miembros %}
+                    <li><i class="fas fa-user"></i> {{ member.username }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <form action="{{ url_for('tournaments.join_tournament_team', tournament_id=tournament._id) }}" method="POST">
+                <input type="hidden" name="team_id" value="{{ team._id }}">
+                <button type="submit" class="btn btn-primary glow-on-hover" 
+                        {% if team.miembros|length != tournament.miembros_X_equipo %}disabled{% endif %}>
+                    {% if team.miembros|length == tournament.miembros_X_equipo %}
+                        <i class="fas fa-check"></i> Seleccionar Equipo
+                    {% else %}
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Equipo Incompleto ({{ team.miembros|length }}/{{ tournament.miembros_X_equipo }})
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-teams bg-gaming-card">
+        <i class="fas fa-users fa-3x text-neon-blue"></i>
+        <p>No tienes equipos disponibles.</p>
+        <a href="{{ url_for('teams.new_team') }}" class="btn btn-primary glow-on-hover">
+            <i class="fas fa-plus"></i> Crear Nuevo Equipo
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="actions">
+        <a href="{{ url_for('tournaments.view_tournament', tournament_id=tournament._id) }}" 
+           class="btn btn-secondary glow-on-hover">
+            <i class="fas fa-arrow-left"></i> Volver al Torneo
+        </a>
+    </div>
+</div>
+
+<style>
+    .select-team-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem;
+        background: rgba(13, 17, 23, 0.7);
+        border-radius: 15px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .select-team-header h1 {
+        margin-bottom: 1rem;
+    }
+
+    .tournament-info, .requirements-info {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    .teams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .team-card {
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .team-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .team-name {
+        margin: 0;
+        color: var(--neon-purple);
+        font-size: 1.5rem;
+    }
+
+    .member-count {
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .team-members {
+        margin-bottom: 1.5rem;
+    }
+
+    .team-members h4 {
+        color: var(--neon-blue);
+        margin-bottom: 0.5rem;
+    }
+
+    .team-members ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .team-members li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        color: var(--text-secondary);
+    }
+
+    .team-members li i {
+        color: var(--neon-blue);
+    }
+
+    .no-teams {
+        text-align: center;
+        padding: 4rem 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+    }
+
+    .no-teams i {
+        margin-bottom: 1rem;
+    }
+
+    .no-teams p {
+        margin: 1rem 0;
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn[disabled] {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+        .teams-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %} 

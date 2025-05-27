@@ -1,29 +1,295 @@
 <!-- templates/admin/dashboard.html -->
 {% extends "base.html" %}
 
+{% block title %}Panel de Administración{% endblock %}
+
 {% block content %}
-<div class="dashboard">
-    <h2>Estadísticas del Sistema</h2>
-    
+<div class="admin-dashboard">
+    <div class="dashboard-header">
+        <h1 class="text-neon-blue">Panel de Administración</h1>
+        <p class="text-neon-purple">Control y Gestión del Sistema</p>
+    </div>
+
     <div class="stats-grid">
-        <div class="stat-card">
-            <h3>{{ stats.total_users }}</h3>
-            <p>Usuarios Totales</p>
+        <!-- Usuarios -->
+        <div class="stat-card bg-gaming-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <h3 class="stat-value text-neon-blue">{{ stats.total_users }}</h3>
+                <p class="stat-label">Usuarios Totales</p>
+            </div>
+            <div class="stat-actions">
+                <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary glow-on-hover">
+                    <i class="fas fa-user-cog"></i> Gestionar
+                </a>
+            </div>
         </div>
-        <div class="stat-card">
-            <h3>{{ stats.total_games }}</h3>
-            <p>Juegos Registrados</p>
+
+        <!-- Juegos -->
+        <div class="stat-card bg-gaming-card">
+            <div class="stat-icon">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="stat-info">
+                <h3 class="stat-value text-neon-green">{{ stats.total_games }}</h3>
+                <p class="stat-label">Juegos Registrados</p>
+            </div>
+            <div class="stat-actions">
+                <a href="{{ url_for('games.list_games') }}" class="btn btn-success glow-on-hover">
+                    <i class="fas fa-plus"></i> Gestionar
+                </a>
+            </div>
         </div>
-        <div class="stat-card">
-            <h3>{{ stats.total_posts }}</h3>
-            <p>Publicaciones</p>
+
+        <!-- Torneos -->
+        <div class="stat-card bg-gaming-card">
+            <div class="stat-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="stat-info">
+                <h3 class="stat-value text-neon-gold">{{ stats.total_tournaments }}</h3>
+                <p class="stat-label">Torneos resgitrados</p>
+            </div>
+            <div class="stat-actions">
+                <a href="{{ url_for('tournaments.list_tournaments') }}" class="btn btn-warning glow-on-hover">
+                    <i class="fas fa-chess"></i> Gestionar
+                </a>
+            </div>
+        </div>
+
+        <!-- Equipos -->
+        <div class="stat-card bg-gaming-card">
+            <div class="stat-icon">
+                <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="stat-info">
+                <h3 class="stat-value text-neon-purple">{{ stats.total_teams }}</h3>
+                <p class="stat-label">Equipos Registrados</p>
+            </div>
+            <div class="stat-actions">
+                <a href="{{ url_for('teams.list_teams') }}" class="btn btn-info glow-on-hover">
+                    <i class="fas fa-users"></i> Gestionar
+                </a>
+            </div>
+        </div>
+
+        <!-- Publicaciones -->
+        <div class="stat-card bg-gaming-card">
+            <div class="stat-icon">
+                <i class="fas fa-newspaper"></i>
+            </div>
+            <div class="stat-info">
+                <h3 class="stat-value text-neon-cyan">{{ stats.total_posts }}</h3>
+                <p class="stat-label">Publicaciones</p>
+            </div>
+            <div class="stat-actions">
+                <a href="{{ url_for('social.feed') }}" class="btn btn-primary glow-on-hover">
+                    <i class="fas fa-eye"></i> Ver Feed
+                </a>
+            </div>
         </div>
     </div>
-    
-    <div class="admin-actions">
-        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">
-            Gestionar Usuarios
-        </a>
+
+    <div class="quick-actions bg-gaming-card">
+        <h2 class="text-neon-purple">Acciones Rápidas</h2>
+        <div class="actions-grid">
+            <a href="{{ url_for('admin.manage_users') }}" class="action-btn glow-on-hover">
+                <i class="fas fa-user-shield"></i>
+                <span>Gestión de Usuarios</span>
+            </a>
+            <a href="{{ url_for('games.new_game') }}" class="action-btn glow-on-hover">
+                <i class="fas fa-plus-circle"></i>
+                <span>Agregar Juego</span>
+            </a>
+            <a href="{{ url_for('tournaments.new_tournament') }}" class="action-btn glow-on-hover">
+                <i class="fas fa-trophy"></i>
+                <span>Crear Torneo</span>
+            </a>
+            <a href="#" class="action-btn glow-on-hover">
+                <i class="fas fa-chart-line"></i>
+                <span>Estadísticas</span>
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    .admin-dashboard {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-header p {
+        font-size: 1.2rem;
+        opacity: 0.8;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--neon-blue);
+    }
+
+    .stat-info {
+        flex-grow: 1;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .stat-label {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .stat-actions {
+        margin-left: auto;
+    }
+
+    .quick-actions {
+        padding: 2rem;
+        border-radius: 16px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .quick-actions h2 {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.2);
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn i {
+        font-size: 2rem;
+        color: var(--neon-blue);
+    }
+
+    .action-btn span {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .text-neon-blue {
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    .text-neon-purple {
+        color: #b829ff;
+        text-shadow: 0 0 10px rgba(184, 41, 255, 0.5);
+    }
+
+    .text-neon-green {
+        color: #00ff88;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .text-neon-gold {
+        color: #ffd700;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .text-neon-cyan {
+        color: #00ffff;
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .bg-gaming-card {
+        background: rgba(26, 31, 46, 0.5);
+    }
+
+    .glow-on-hover {
+        transition: all 0.3s ease;
+    }
+
+    .glow-on-hover:hover {
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .admin-dashboard {
+            padding: 1rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-card {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stat-actions {
+            margin: 1rem 0 0 0;
+        }
+
+        .actions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 {% endblock %}

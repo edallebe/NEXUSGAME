@@ -4,6 +4,97 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/social.css') }}">
+<style>
+    .post-card {
+        background: rgba(26, 31, 46, 0.8);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .post-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .post-imagen {
+        max-width: 500px;
+        max-height: 300px;
+        margin: 1rem auto;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+    .post-image-content {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .badge-logro {
+        background-color: #00ff88;
+        color: #1a1f2e;
+    }
+
+    .badge-estrategia {
+        background-color: #b829ff;
+        color: white;
+    }
+
+    .badge-noticia {
+        background-color: #00ffff;
+        color: #1a1f2e;
+    }
+
+    .badge-game {
+        background-color: #ffd700;
+        color: #1a1f2e;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .action-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        color: var(--neon-blue);
+    }
+
+    .action-btn.like-btn.active {
+        color: #ff4081;
+    }
+
+    .mod-actions {
+        margin-left: auto;
+    }
+
+    .btn-delete-mod {
+        background-color: #ff4081;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-delete-mod:hover {
+        background-color: #f50057;
+        box-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -41,6 +132,7 @@
 
                 <div class="post-body">
                     <h2 class="post-title">{{ post.titulo }}</h2>
+                    <p class="post-content">{{ post.contenido }}</p>
                     {% if post.imagen %}
                         <div class="post-imagen">
                             <img src="{{ url_for('static', filename='uploads/' ~ post.imagen) }}" alt="Imagen para {{ post.titulo|e }}" class="post-image-content">
@@ -50,7 +142,6 @@
                             <img src="{{ post.img_url }}" alt="Imagen para {{ post.titulo|e }}" class="post-image-content">
                         </div>
                     {% endif %}
-                    <p class="post-content">{{ post.contenido }}</p>
                 </div>
 
                 <div class="post-footer">
@@ -65,14 +156,23 @@
                             <i class="fas fa-comment"></i>
                             <span class="comments-count">{{ post.comentarios }}</span>
                         </a>
+                        
+                        {% if session.get('user_id')|string == post.autor_id|string %}
+                            <div class="post-options">
+                                <button class="btn-delete-mod" onclick="deletePost('{{ post._id }}')">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        {% endif %}
+                        
+                        {% if session.get('is_admin') %}
+                            <div class="mod-actions">
+                                <button class="btn-delete-mod" onclick="moderatePost('{{ post._id }}')">
+                                    <i class="fas fa-shield-alt"></i> Moderar
+                                </button>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% if session.get('user_id')|string == post.autor_id|string %}
-                        <div class="post-options">
-                            <button class="btn btn-danger btn-sm" onclick="deletePost('{{ post._id }}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    {% endif %}
                 </div>
             </article>
         {% else %}
@@ -131,6 +231,28 @@ function deletePost(postId) {
         })
         .then(() => window.location.reload())
         .catch(error => console.error('Error:', error));
+    }
+}
+
+function moderatePost(postId) {
+    if (confirm('¿Estás seguro de que deseas moderar y eliminar esta publicación?')) {
+        fetch(`/social/post/${postId}/moderate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert('Error al moderar la publicación');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al moderar la publicación');
+        });
     }
 }
 

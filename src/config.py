@@ -3,8 +3,7 @@ from pymongo import MongoClient #importar el cliente de pymongo
 import certifi #importar certificado
 
 #variable de conexion
-#MONGO="mongodb+srv://eleiva:eleiva123456@cluster0.guwgbzw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-MONGO="mongodb+srv://ferjuanfelipe7:nA2vbcu45lX629wA@cluster0.an4iqzy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO="mongodb+srv://eleiva:eleiva123456@cluster0.guwgbzw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 certificado=certifi.where()
 

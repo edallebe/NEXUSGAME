@@ -4,7 +4,27 @@
 
 {% block contenido %}
 <div class="container">
-    <h1>¡Bienvenido a mi aplicación Flask!</h1>
-    <p>La aplicación está funcionando correctamente.</p>
+    <div class="welcome-section" style="text-align:center; margin-bottom:2rem;">
+        <h1 class="text-neon-blue">¡Bienvenido a NEXUSGAME!</h1>
+        <p class="lead" style="font-size:1.3rem;">
+            La plataforma definitiva para gamers donde puedes:
+        </p>
+    </div>
+    <div class="features-list" style="max-width:700px; margin:0 auto 2rem auto;">
+        <ul style="list-style:none; padding:0; font-size:1.1rem;">
+            <li><i class="fas fa-trophy text-neon-green"></i> <strong>Participar en torneos</strong> de tus juegos favoritos.</li>
+            <li><i class="fas fa-users text-neon-purple"></i> <strong>Crear y gestionar equipos</strong> para competir y conocer nuevos amigos.</li>
+            <li><i class="fas fa-comments text-neon-blue"></i> <strong>Compartir logros, estrategias y novedades</strong> en el muro social.</li>
+            <li><i class="fas fa-shield-alt text-neon-green"></i> <strong>Disfrutar de un entorno seguro y moderado</strong> para todos los jugadores.</li>
+        </ul>
+    </div>
+    <div class="cta-section" style="text-align:center;">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary glow-on-hover" style="font-size:1.2rem; margin-right:1rem;">
+            <i class="fas fa-user-plus"></i> ¡Regístrate y únete ahora!
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary glow-on-hover" style="font-size:1.2rem;">
+            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+        </a>
+    </div>
 </div>
 {% endblock %} 

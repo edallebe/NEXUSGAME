@@ -59,14 +59,28 @@ def new_post():
     
     if request.method == 'POST':
         try:
-            img_url = request.form.get('img_url') 
+            img_url_form = request.form.get('img_url')
+            image_file = request.files.get('imagen_file')
+            
+            final_imagen_filename = None
+            final_img_url = None
+            
+            if image_file and image_file.filename != '' and allowed_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                if not os.path.exists(UPLOAD_FOLDER):
+                    os.makedirs(UPLOAD_FOLDER)
+                image_file.save(os.path.join(UPLOAD_FOLDER, filename))
+                final_imagen_filename = filename
+            elif img_url_form:
+                final_img_url = img_url_form
             post = Post(
                 titulo=request.form['titulo'],
                 contenido=request.form['contenido'],
                 autor_id=session['user_id'],
                 tipo=request.form['tipo'],
                 juego_id=request.form.get('juego_id'),
-                img_url=img_url
+                img_url=final_img_url,
+                imagen=final_imagen_filename
             )
             post.save()
             flash('Publicación creada exitosamente', 'success')

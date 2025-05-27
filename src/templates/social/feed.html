@@ -43,7 +43,11 @@
                     <h2 class="post-title">{{ post.titulo }}</h2>
                     {% if post.imagen %}
                         <div class="post-imagen">
-                            <img src="{{ post.img_url }}" alt="Imagen de la publicación" style="max-width:100%; border-radius:8px;">
+                            <img src="{{ url_for('static', filename='uploads/' ~ post.imagen) }}" alt="Imagen para {{ post.titulo|e }}" class="post-image-content">
+                        </div>
+                    {% elif post.img_url %}
+                        <div class="post-imagen">
+                            <img src="{{ post.img_url }}" alt="Imagen para {{ post.titulo|e }}" class="post-image-content">
                         </div>
                     {% endif %}
                     <p class="post-content">{{ post.contenido }}</p>

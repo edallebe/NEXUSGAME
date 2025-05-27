@@ -1,8 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from models.tournament import Tournament
-from models.games import games_collection
+from models.games import games_collection # Assuming games_collection is what you need
+# If tournaments_collection is used directly (as in edit_tournament), ensure it's imported or Tournament model handles updates.
+from models.user import User
+from models.team import Team
 from bson.objectid import ObjectId
 from datetime import datetime
+from decorators.auth_decorators import login_required
 
 tournaments_bp = Blueprint('tournaments', __name__, url_prefix='/tournaments')
 
@@ -17,45 +21,35 @@ def list_tournaments():
 
 @tournaments_bp.route('/new', methods=['GET', 'POST'])
 def new_tournament():
+    if 'user_id' not in session: # Added login check, consistent with other routes
+        flash('Debes iniciar sesión para crear un torneo', 'error')
+        return redirect(url_for('auth.login'))
+
     if request.method == 'POST':
         try:
-<<<<<<< HEAD
             modalidad = request.form['modalidad']
             miembros_x_equipo = 1 if modalidad == 'individual' else int(request.form.get('miembros_X_equipo', 2))
 
-=======
->>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
             tournament = Tournament(
                 nombre=request.form['nombre'],
                 juego_id=request.form['juego_id'],
                 fecha_inicio=request.form['fecha_inicio'],
                 fecha_fin=request.form['fecha_fin'],
-<<<<<<< HEAD
                 modalidad=modalidad,
-                max_cupos=int(request.form['max_cupos']),
+                max_participantes=int(request.form['max_participantes']), # Changed max_cupos to max_participantes for consistency
                 miembros_X_equipo=miembros_x_equipo,
                 premio=request.form['premio']
             )
 
-            # Establecer el creador del torneo
             tournament.creador_id = ObjectId(session['user_id'])
-
-            # Actualizar campos adicionales
             tournament.reglas = request.form.get('reglas', '')
             tournament.img_portada = request.form.get('img_portada', '')
+            tournament.descripcion = request.form.get('descripcion', '') # Added descripcion for consistency
 
-            # Actualizar premios adicionales
             if request.form.get('premio2'):
                 tournament.premios[1]['premio'] = request.form['premio2']
             if request.form.get('premio3'):
                 tournament.premios[2]['premio'] = request.form['premio3']
-
-=======
-                max_participantes=request.form['max_participantes'],
-                premio=request.form['premio'],
-                descripcion=request.form['descripcion']
-            )
->>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
             tournament.save()
             flash('Torneo creado exitosamente', 'success')
             return redirect(url_for('tournaments.list_tournaments'))
@@ -63,7 +57,6 @@ def new_tournament():
             flash(f'Error al crear el torneo: {str(e)}', 'error')
             return redirect(url_for('tournaments.new_tournament'))
 
-    # Obtener lista de juegos para el formulario
     games = list(games_collection.find())
     return render_template('tournaments/new.html', games=games)
 
@@ -73,8 +66,7 @@ def view_tournament(tournament_id):
     if tournament:
         game = games_collection.find_one({"_id": tournament["juego_id"]})
         tournament["juego"] = game["game"] if game else "Juego no encontrado"
-<<<<<<< HEAD
-        
+
         # Obtener información de participantes
         participantes_info = []
         for participant_id in tournament["participantes"]:
@@ -103,15 +95,12 @@ def view_tournament(tournament_id):
         if 'user_id' in session:
             is_creator = str(tournament.get('creador_id', '')) == str(session['user_id'])
         
-        return render_template('tournaments/view.html', tournament=tournament, is_creator=is_creator)
-    
-=======
-        return render_template('tournaments/view.html', tournament=tournament)
->>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
+        return render_template('tournaments/view.html', tournament=tournament, is_creator=is_creator)    
     flash('Torneo no encontrado', 'error')
     return redirect(url_for('tournaments.list_tournaments'))
 
 @tournaments_bp.route('/<tournament_id>/edit', methods=['GET', 'POST'])
+@login_required # Added login_required for consistency
 def edit_tournament(tournament_id):
     tournament = Tournament.find_by_id(tournament_id)
     if not tournament:
@@ -119,7 +108,7 @@ def edit_tournament(tournament_id):
         return redirect(url_for('tournaments.list_tournaments'))
 
     # Verificar si el usuario actual es el creador
-    if str(tournament.get('creador_id', '')) != str(session['user_id']):
+    if 'user_id' not in session or str(tournament.get('creador_id', '')) != str(session['user_id']):
         flash('No tienes permiso para editar este torneo', 'error')
         return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id))
 
@@ -134,10 +123,8 @@ def edit_tournament(tournament_id):
                 "premio": request.form['premio'],
                 "descripcion": request.form['descripcion']
             }
-            tournaments_collection.update_one(
-                {"_id": ObjectId(tournament_id)},
-                {"$set": updated_tournament}
-            )
+            # Assuming Tournament model has an update method or tournaments_collection is correctly defined and imported
+            Tournament.update_tournament(ObjectId(tournament_id), updated_tournament) # Or use tournaments_collection.update_one if that's the pattern
             flash('Torneo actualizado exitosamente', 'success')
             return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id))
         except Exception as e:
@@ -145,16 +132,13 @@ def edit_tournament(tournament_id):
 
     # Obtener información del juego para mostrar en el formulario
     game = games_collection.find_one({"_id": tournament["juego_id"]})
-    tournament["juego"] = game["game"] if game else "Juego no encontrado"
-    
-    return render_template('tournaments/edit.html', tournament=tournament)
+    tournament["juego_nombre"] = game["game"] if game else "Juego no encontrado" # Use a different key to avoid overwriting game object
+    games = list(games_collection.find()) # Pass games for the dropdown
+    return render_template('tournaments/edit.html', tournament=tournament, games=games)
 
 @tournaments_bp.route('/<tournament_id>/join')
+@login_required
 def join_tournament(tournament_id):
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para unirte al torneo', 'error')
-        return redirect(url_for('auth.login'))
-    
     try:
         tournament = Tournament.find_by_id(tournament_id)
         if not tournament:
@@ -168,7 +152,6 @@ def join_tournament(tournament_id):
         if ObjectId(session['user_id']) in tournament['participantes']:
             flash('Ya estás registrado en este torneo', 'info')
             return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id))
-<<<<<<< HEAD
 
         user_id = session['user_id']
         
@@ -209,12 +192,6 @@ def join_tournament(tournament_id):
             
             Tournament.add_participant(tournament_id, user_id)
             flash('Te has inscrito al torneo exitosamente', 'success')
-        
-=======
-        
-        Tournament.add_participant(tournament_id, session['user_id'])
-        flash('Te has unido al torneo exitosamente', 'success')
->>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf
     except Exception as e:
         flash(f'Error al unirse al torneo: {str(e)}', 'error')
     
@@ -254,8 +231,8 @@ def join_tournament_team(tournament_id):
     return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id))
 
 @tournaments_bp.route('/<tournament_id>/leave')
+@login_required
 def leave_tournament(tournament_id):
-<<<<<<< HEAD
     try:
         tournament = Tournament.find_by_id(tournament_id)
         if not tournament:
@@ -305,25 +282,3 @@ def delete_tournament(tournament_id):
     except Exception as e:
         flash(f'Error al eliminar el torneo: {str(e)}', 'error')
         return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id)) 
-=======
-    if 'user_id' not in session:
-        flash('Debes iniciar sesión para salir del torneo', 'error')
-        return redirect(url_for('auth.login'))
-    
-    try:
-        tournament = Tournament.find_by_id(tournament_id)
-        if not tournament:
-            flash('Torneo no encontrado', 'error')
-            return redirect(url_for('tournaments.list_tournaments'))
-        
-        if ObjectId(session['user_id']) not in tournament['participantes']:
-            flash('No estás registrado en este torneo', 'info')
-            return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id))
-        
-        Tournament.remove_participant(tournament_id, session['user_id'])
-        flash('Has salido del torneo exitosamente', 'success')
-    except Exception as e:
-        flash(f'Error al salir del torneo: {str(e)}', 'error')
-    
-    return redirect(url_for('tournaments.view_tournament', tournament_id=tournament_id)) 
->>>>>>> c6308ac731f90bfdb4108fa94b749349004031cf

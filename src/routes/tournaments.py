@@ -25,8 +25,12 @@ def new_tournament():
         try:
             # Determinar miembros por equipo basado en la modalidad
             miembros_x_equipo = 1
-            if request.form['modalidad'] == 'equipo':
-                miembros_x_equipo = int(request.form['miembros_X_equipo'])
+            modalidad = request.form['modalidad']
+            
+            if modalidad == 'equipo':
+                miembros_x_equipo = int(request.form.get('miembros_X_equipo', 2))
+            else:
+                miembros_x_equipo = 1
 
             # Crear el torneo con el premio principal
             tournament = Tournament(
@@ -35,7 +39,7 @@ def new_tournament():
                 descripcion=request.form['descripcion'],
                 fecha_inicio=request.form['fecha_inicio'],
                 fecha_fin=request.form['fecha_fin'],
-                modalidad=request.form['modalidad'],
+                modalidad=modalidad,
                 max_cupos=int(request.form['max_cupos']),
                 miembros_X_equipo=miembros_x_equipo,
                 premio=request.form['premio']  # Premio principal

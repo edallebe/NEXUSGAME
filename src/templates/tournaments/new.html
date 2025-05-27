@@ -331,18 +331,17 @@
     });
 
     // Inicializar el estado del campo miembros_X_equipo
-    toggleMiembrosEquipo();
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleMiembrosEquipo();
+    });
 
     // Validar el formulario antes de enviar
     document.getElementById('tournamentForm').addEventListener('submit', function(e) {
         const modalidad = document.getElementById('modalidad').value;
-        const miembrosInput = document.getElementById('miembros_X_equipo');
         const miembrosHidden = document.getElementById('miembros_X_equipo_hidden');
 
         if (modalidad === 'individual') {
             miembrosHidden.value = '1';
-        } else {
-            miembrosHidden.value = miembrosInput.value;
         }
     });
 </script>
